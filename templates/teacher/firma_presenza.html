@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firma Presenza Docente - Accademia d'Arte di Cagliari</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher/firma_presenza.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" height="40">
+        </div>
+        <nav>
+            <a href="#" class="logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <h1>Firma Presenza Lezione</h1>
+                <p class="subtitle">Seleziona la lezione e conferma la tua presenza per registrarla.</p>
+
+                <form class="presence-form" action="{{ url_for('teacher_bp.salva_firma_docente') }}" method="POST">
+                    
+                    <div class="form-group">
+                        <label for="lezione-select">Seleziona Lezione</label>
+                        <select name="lezione" id="lezione-select" required>
+                            <option value="" disabled selected>-- Lezioni da firmare --</option>
+                            {% for lezione in lezioni %}
+                                <option value="{{ lezione.idLezione }}">{{ lezione.Nome }} - {{ lezione.OraInizio_formatted }}</option>
+                            {% else %}
+                                <option value="" disabled>Nessuna lezione da firmare per oggi.</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                     <!-- NUOVA SEZIONE PER LA CONFERMA DELLA PRESENZA (Toggle Switch) -->
+                    <div class="form-group toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="conferma_presenza" name="conferma_presenza">
+                            <span class="slider"></span>
+                        </label>
+                        <label for="conferma_presenza" class="toggle-label">Confermo la mia presenza a questa lezione.</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note">Note Aggiuntive (opzionale)</label>
+                        <textarea id="note" name="note" rows="4" placeholder="Aggiungi eventuali note o comunicazioni..."></textarea>
+                    </div>
+                    
+                    <button type="submit" {% if not lezioni %}disabled{% endif %}>Conferma Firma</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+
+</body>
+</html>

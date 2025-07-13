@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registra Presenze - Accademia d'Arte di Cagliari</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher/appello.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" height="40">
+        </div>
+        <nav>
+            <!-- CORREZIONE 1: Aggiunto il link corretto per il logout -->
+            <a href="{{ url_for('auth_bp.logout') }}" class="logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <h1>Appello per: {{ lezione.nomeMateria }}</h1>
+                <p class="subtitle">Lezione del {{ lezione.data }}, ore {{ lezione.ora }}</p>
+
+                <!-- CORREZIONE 2: Usato url_for per l'attributo action -->
+                <form id="attendance-form" action="{{ url_for('teacher_bp.salva_presenze') }}" method="POST">
+                    <input type="hidden" name="idLezione" value="{{ lezione.idLezione }}">
+
+                    <div class="student-grid">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Matricola</th>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Stato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for studente in studenti %}
+                                <tr class="student-row" data-studente-id="{{ studente.matricola }}">
+                                    <td>{{ studente.matricola }}</td>
+                                    <td>{{ studente.Nome }}</td>
+                                    <td>{{ studente.Cognome }}</td>
+                                    <td>
+                                        <input type="hidden" name="studente_{{ studente.matricola }}" value="presente">
+                                        <button type="button" class="attendance-button presente">Presente</button>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" style="text-align: center; padding: 2rem;">Nessuno studente iscritto a questa materia.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button type="submit" class="confirm-button" {% if not studenti %}disabled{% endif %}>
+                        Conferma Presenze
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('attendance-form');
+            
+            form.addEventListener('click', (event) => {
+                if (event.target.classList.contains('attendance-button')) {
+                    const button = event.target;
+                    const row = button.closest('.student-row');
+                    const studentId = row.dataset.studenteId;
+                    const hiddenInput = form.querySelector(`input[name="studente_${studentId}"]`);
+
+                    if (button.classList.contains('presente')) {
+                        button.classList.remove('presente');
+                        button.classList.add('assente');
+                        button.textContent = 'Assente';
+                        hiddenInput.value = 'assente';
+                        row.classList.add('is-absent');
+                    } else {
+                        button.classList.remove('assente');
+                        button.classList.add('presente');
+                        button.textContent = 'Presente';
+                        hiddenInput.value = 'presente';
+                        row.classList.remove('is-absent');
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

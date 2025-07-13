@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Accademico - Home</title>
+    <!-- Caricamento di Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Caricamento del font Inter da Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Importazione del file CSS esterno -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body class="body-layout">
+    <!-- Intestazione (Header) -->
+    <header class="main-header">
+        <!-- Contenitore del Logo -->
+        <div class="header-logo-container">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" class="academy-logo">
+        </div>
+
+        <!-- Titolo H1 (Centrato e nascosto su mobile) -->
+        <h1 class="header-title">Accademia d'Arte di Cagliari</h1>
+
+        <!-- Voci di Navigazione -->
+        <nav class="header-nav">
+            <ul class="header-nav-list">
+                <li><a href="#" class="nav-link">Guida</a></li>
+                <li><a href="#" class="nav-link">Chi siamo</a></li>
+                <li><a href="{{ url_for('auth_bp.login') }}" class="nav-link">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenuto Principale -->
+    <main class="main-content">
+        <div class="main-text-container">
+            <h2 class="main-heading">
+                Benvenuto nel tuo <span class="color-blue">Registro Accademico Elettronico</span>
+            </h2>
+            <p class="main-paragraph">
+                Accedi facilmente a voti, orari, annunci e tutte le risorse didattiche.
+            </p>
+            <a href="{{ url_for('auth_bp.login') }}" class="main-button">
+                Accedi al Registro
+            </a>
+        </div>
+    </main>
+
+    <!-- Piè di Pagina (Footer) -->
+    <footer class="main-footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+</body>
+</html>

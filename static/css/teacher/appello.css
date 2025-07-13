@@ -1,0 +1,165 @@
+/* --- Reset e Impostazioni Globali --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Header e Footer (coerenti con le altre pagine) --- */
+.header, .footer {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    color: #999;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: none;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.logout-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* --- Contenuto Principale --- */
+main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Allinea in alto per pagine lunghe */
+    padding: 2rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px; /* Larghezza maggiore per la tabella */
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    margin-bottom: 2.5rem;
+}
+
+/* --- Griglia Studenti (Tabella) --- */
+.student-grid {
+    margin-bottom: 2.5rem;
+    overflow-x: auto; /* Per responsività su schermi piccoli */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+thead {
+    background-color: #f8f9fa;
+}
+
+th {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.student-row.is-absent {
+    background-color: #fff5f5; /* Sfondo rosso chiaro per gli assenti */
+    color: #555;
+}
+
+/* --- Pulsanti di Stato --- */
+.attendance-button {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px; /* Forma a pillola */
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100px; /* Larghezza fissa per coerenza */
+    color: white;
+}
+
+.attendance-button.presente {
+    background-color: #28a745; /* Verde per i presenti */
+}
+
+.attendance-button.presente:hover {
+    background-color: #218838;
+}
+
+.attendance-button.assente {
+    background-color: #dc3545; /* Rosso per gli assenti */
+}
+
+.attendance-button.assente:hover {
+    background-color: #c82333;
+}
+
+/* --- Pulsante di Conferma Finale --- */
+.confirm-button {
+    width: auto; /* Larghezza automatica basata sul testo */
+    padding: 0.8rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #3A86FF; /* Blu principale */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.confirm-button:hover {
+    background-color: #3174db;
+    transform: translateY(-2px);
+}

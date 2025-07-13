@@ -1,0 +1,168 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f8f8; /* Un grigio molto chiaro per lo sfondo */
+}
+
+/* Layout del corpo della pagina */
+.body-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* min-h-screen */
+}
+
+/* Colori basati sul logo */
+.color-blue { color: #007bff; } /* Blu vibrante */
+.color-red { color: #dc3545; } /* Rosso vibrante */
+.color-green { color: #28a745; } /* Verde vibrante */
+.color-orange { color: #fd7e14; } /* Arancione vibrante */
+.color-dark-grey { color: #343a40; } /* Grigio scuro per il testo */
+
+/* Intestazione (Header) */
+.main-header {
+    background-color: #ffffff; /* bg-white */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    padding-top: 1rem; /* py-4 */
+    padding-bottom: 1rem; /* py-4 */
+    padding-left: 1.5rem; /* px-6 */
+    padding-right: 1.5rem; /* px-6 */
+    display: flex; /* flex */
+    align-items: center; /* items-center */
+    position: relative; /* relative */
+    border-bottom-left-radius: 0.5rem; /* rounded-b-lg */
+    border-bottom-right-radius: 0.5rem; /* rounded-b-lg */
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+    .main-header {
+        padding-left: 3rem; /* md:px-12 */
+        padding-right: 3rem; /* md:px-12 */
+    }
+}
+
+/* Stili per il logo */
+.academy-logo {
+    max-height: 80px; /* Altezza massima del logo */
+    width: auto; /* Larghezza automatica per mantenere le proporzioni */
+    border-radius: 0.25rem; /* rounded-md */
+}
+
+/* Titolo H1 nel Header */
+.header-title {
+    font-size: 2rem; /* Ridotto ulteriormente per rimpicciolirlo */
+    font-weight: 800; /* font-extrabold */
+    color: #4b5563; /* text-gray-800 */
+    text-align: center; /* Per centrare il testo all'interno del suo spazio */
+    position: absolute; /* Posizionamento assoluto per centrarlo */
+    left: 50%; /* Sposta l'elemento a metà dell'header */
+    transform: translateX(-50%); /* Sposta l'elemento indietro della metà della sua larghezza per un centraggio perfetto */
+    white-space: nowrap; /* Impedisce che il testo vada a capo */
+    padding: 0 1rem; /* Aggiunge un po' di padding per evitare che si attacchi ai bordi se molto largo */
+}
+
+/* Nasconde l'h1 su schermi piccoli (mobile) */
+@media (max-width: 900px) { /* before md breakpoint */
+    .header-title {
+        display: none; /* hidden */
+    }
+}
+
+/* Mostra l'h1 su schermi medi e grandi */
+@media (min-width: 901px) { /* md breakpoint */
+    .header-title {
+        font-size: 2rem; /* Ridotto anche per schermi medi e grandi */
+        display: block; /* md:block */
+    }
+}
+
+/* Navigazione nell'Header */
+.header-nav {
+    margin-left: auto; /* ml-auto per spingere a destra */
+}
+
+.header-nav-list {
+    display: flex; /* flex */
+    gap: 1.5rem; /* space-x-6 (Tailwind uses gap for space-x/y) */
+}
+
+/* Stili per i link di navigazione */
+.nav-link {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 500; /* font-medium */
+    color: #4b5563; /* text-gray-700 */
+    transition-property: color; /* transition */
+    transition-duration: 300ms; /* duration-300 */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+}
+
+.nav-link:hover {
+    color: #1f2937; /* hover:text-gray-900 */
+}
+
+/* Contenuto Principale */
+.main-content {
+    flex-grow: 1; /* flex-grow */
+    display: flex; /* flex */
+    align-items: center; /* items-center */
+    justify-content: center; /* justify-center */
+    padding: 1.5rem; /* p-6 */
+}
+
+/* Contenitore del testo principale */
+.main-text-container {
+    text-align: center; /* text-center */
+    max-width: 72rem; /* max-w-2xl */
+}
+
+/* Titolo H2 nel Main */
+.main-heading {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 800; /* font-extrabold */
+    color: #1f2937; /* text-gray-800 */
+    margin-bottom: 1.5rem; /* mb-6 */
+    line-height: 1.25; /* leading-tight */
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+    .main-heading {
+        font-size: 4rem; /* md:text-5xl */
+    }
+}
+
+/* Paragrafo nel Main */
+.main-paragraph {
+    font-size: 1.5rem; /* text-xl */
+    color: #4b5563; /* text-gray-600 */
+    margin-bottom: 2.5rem; /* mb-10 */
+}
+
+/* Stili per il pulsante principale */
+.main-button {
+    background-color: #2563eb; /* bg-blue-600 */
+    color: #ffffff; /* text-white */
+    font-size: 1.5rem; /* text-lg */
+    font-weight: 600; /* font-bold */
+    padding-top: 0.75rem; /* py-3 */
+    padding-bottom: 0.75rem; /* py-3 */
+    padding-left: 1.5rem; /* px-6 */
+    padding-right: 1.5rem; /* px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    transition-property: background-color; /* transition */
+    transition-duration: 300ms; /* duration-300 */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+}
+
+.main-button:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}
+
+/* Piè di Pagina (Footer) */
+.main-footer {
+    background-color: #1f2937; /* bg-gray-800 */
+    color: #ffffff; /* text-white */
+    padding-top: 1rem; /* py-4 */
+    padding-bottom: 1rem; /* py-4 */
+    text-align: center; /* text-center */
+    border-top-left-radius: 0.5rem; /* rounded-t-lg */
+    border-top-right-radius: 0.5rem; /* rounded-t-lg */
+}

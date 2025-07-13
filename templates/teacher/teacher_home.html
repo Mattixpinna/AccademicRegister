@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Docente - Accademia d'Arte di Cagliari</title>
+    <link rel="stylesheet" href="../../static/css/teacher/teacher_home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header della Pagina -->
+    <header class="main-header">
+        <div class="container header-container">
+            <!-- Logo a sinistra -->
+            <div class="logo">
+                <img src="../../static/images/logo.png" alt="Logo Accademia d'Arte di Cagliari">
+            </div>
+            <!-- Titolo al centro -->
+            <div class="header-title">
+                Accademia d'Arte di Cagliari
+            </div>
+            <!-- Navigazione a destra -->
+            <nav class="main-nav">
+                <a href="{{ url_for('auth_bp.logout') }}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenuto Principale -->
+    <main class="dashboard">
+        <div class="container">
+            <h1 class="dashboard-title">Dashboard Docente</h1>
+            <p class="dashboard-subtitle">Seleziona l'operazione che desideri eseguire.</p>
+
+            <div class="dashboard-cards">
+                <!-- Card per l'Appello -->
+                <a href="{{ url_for('teacher_bp.serve_appello_page') }}" class="card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <h2 class="card-title">Appello</h2>
+                    <p class="card-description">Accedi al registro di classe per registrare le presenze e le assenze degli studenti.</p>
+                </a>
+
+                <!-- Card per la Firma del Docente -->
+                <a href="{{url_for('teacher_bp.serve_firma_presenza_page')}}" class="card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </div>
+                    <h2 class="card-title">Firma Presenza</h2>
+                    <p class="card-description">Registra la tua presenza per la lezione odierna e convalida l'orario di servizio.</p>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer della Pagina -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

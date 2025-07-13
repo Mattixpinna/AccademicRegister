@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Manager - Accademia d'Arte</title>
+    <link rel="stylesheet" href="manager_style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manager/manager_home.css') }}">
+    <link rel="stylesheet" href="../../static/css/manager/manager_home.css">
+    <!-- Icone da Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo-container">
+            <!-- Inserisci qui il tuo logo -->
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" class="logo">
+        </div>
+        <nav class="main-nav">
+            <a href="{{ url_for('auth_bp.logout') }}" class="logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Dashboard Manager</h1>
+            <p>Seleziona l'operazione che desideri eseguire.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Card 1: Gestione Insegnamenti -->
+            <a href="/manager/insegnamenti" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="ph-bold ph-books"></i>
+                </div>
+                <h2>Gestione Insegnamenti</h2>
+                <p>Crea, modifica ed elimina i corsi e le materie dell'accademia.</p>
+            </a>
+
+            <!-- Card 2: Gestione Studenti -->
+            <a href="/manager/studenti" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="ph-bold ph-student"></i>
+                </div>
+                <h2>Gestione Studenti</h2>
+                <p>Visualizza, aggiungi e gestisci le anagrafiche degli studenti iscritti.</p>
+            </a>
+
+            <!-- Card 3: Gestione Docenti -->
+            <a href="/manager/docenti" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="ph-bold ph-chalkboard-teacher"></i>
+                </div>
+                <h2>Gestione Docenti</h2>
+                <p>Amministra i profili dei docenti e le loro cattedre di insegnamento.</p>
+            </a>
+
+            <!-- Card 4: Gestione Lezioni -->
+            <a href="/manager/lezioni" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="ph-bold ph-calendar-check"></i>
+                </div>
+                <h2>Gestione Lezioni</h2>
+                <p>Pianifica e organizza il calendario delle lezioni per ogni corso.</p>
+            </a>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+
+</body>
+</html>

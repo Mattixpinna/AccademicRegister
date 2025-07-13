@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Registro Accademico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Assicurati che il percorso a login.css sia corretto -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <style>
+        /* Stili per i messaggi di feedback del form */
+        .message-success {
+            color: #16a34a; /* Verde */
+            font-weight: 600;
+        }
+        .message-error {
+            color: #dc2626; /* Rosso */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="login-body-layout">
+    <header class="login-header">
+        <div class="login-logo-container">
+            <!-- Assicurati che il percorso all'immagine sia corretto -->
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" class="login-academy-logo">
+        </div>
+    </header>
+
+    <main class="login-main-content">
+        <div class="login-form-container">
+            <h2 class="login-heading">Accedi al tuo account</h2>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" id="email" name="email" class="form-input" placeholder="Inserisci la tua email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Inserisci la tua password" required>
+                </div>
+                <button type="submit" class="login-button">Accedi</button>
+                <a href="#" class="forgot-password-link">Hai dimenticato la password?</a>
+            </form>
+            <div id="message-container"></div>
+        </div>
+    </main>
+
+    <footer class="login-footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const messageContainer = document.getElementById('message-container');
+
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            messageContainer.innerHTML = '';
+
+            fetch("{{ url_for('auth_bp.handle_login_api') }}", { // Usa url_for per sicurezza
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // --- MODIFICA CHIAVE ---
+                // Controlliamo la presenza di 'redirect_url' invece di 'teacher'.
+                // Questo si allinea con la risposta dell'API in auth_routes.py.
+                if (data.redirect_url) {
+                    messageContainer.innerHTML = `<p class="message-success">${data.message}</p>`;
+                    // Usiamo l'URL fornito dall'API per il reindirizzamento
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url; 
+                    }, 1500);
+                } else {
+                    // La logica di errore rimane la stessa
+                    messageContainer.innerHTML = `<p class="message-error">Errore: ${data.error}</p>`;
+                }
+            })
+            .catch((error) => {
+                console.error('Errore:', error);
+                messageContainer.innerHTML = `<p class="message-error">Impossibile contattare il server.</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
