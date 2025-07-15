@@ -1,0 +1,221 @@
+/* --- Reset e Stili Globali --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Layout Header, Main, Footer --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.logo {
+    height: 35px;
+}
+
+.logout-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 30px;
+}
+
+.page-footer {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-size: 0.875rem;
+}
+
+/* --- Stile delle "Card" contenitori --- */
+.card-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;
+}
+
+.card-container h2 {
+    text-align: center;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.card-container .subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+/* --- Stili per il Form --- */
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: 500; color: #34495e; margin-bottom: 8px; }
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input.datetime-input, /* Aggiunto per coerenza */
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+/* Stile per input datetime-local */
+.form-group input[type="datetime-local"] {
+    width: 100%;
+    padding: 11px 15px; /* Leggero aggiustamento per l'icona interna */
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+.form-row { display: flex; gap: 20px; }
+.half-width { flex: 1; }
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+.submit-button:hover { background-color: #2980b9; }
+
+.delete-button {
+    width: 100%; /* Occupare tutta la larghezza del modale */
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 15px; /* Più grande e cliccabile */
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+
+/* --- Stile per Messaggi Flash --- */
+.flash-message {
+    width: 100%;
+    max-width: 800px;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+.flash-message.danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.flash-message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+
+/* --- Stile per il Calendario e Modale --- */
+#calendar {
+    margin-top: 20px;
+}
+:root {
+  --fc-border-color: #e9ecef;
+  --fc-daygrid-event-dot-width: 8px;
+  --fc-list-event-dot-width: 10px;
+  --fc-event-bg-color: #3498db;
+  --fc-event-border-color: #3498db;
+  --fc-event-text-color: #fff;
+  --fc-today-bg-color: #f1f3f5;
+}
+.fc .fc-button-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+.fc .fc-button-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+.fc-event { cursor: pointer; }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+    background-color: #ffffff;
+    margin: 15% auto;
+    padding: 30px 40px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.modal-content h3 { color: #2c3e50; margin-bottom: 20px;}
+.modal-content p { color: #34495e; margin-bottom: 10px;}

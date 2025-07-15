@@ -1,0 +1,160 @@
+/* --- Reset e Stili Globali --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Layout Header, Main, Footer --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.logo {
+    height: 35px;
+}
+
+.logout-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column; /* Impila le card verticalmente */
+    align-items: center;
+    padding: 40px 20px;
+    gap: 30px; /* Spazio tra il form e la tabella */
+}
+
+.page-footer {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-size: 0.875rem;
+}
+
+/* --- Stile delle "Card" contenitori --- */
+.card-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px; /* Larghezza maggiore per contenere la tabella */
+}
+
+.card-container h1, .card-container h2 {
+    text-align: center;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.card-container h1 { font-size: 1.75rem; }
+.card-container h2 { font-size: 1.5rem; }
+
+.card-container .subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+/* --- Stili per il Form (invariati) --- */
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: 500; color: #34495e; margin-bottom: 8px; }
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+.form-row { display: flex; gap: 20px; }
+.half-width { flex: 1; }
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+.submit-button:hover { background-color: #2980b9; }
+
+/* --- NUOVI STILI PER LA TABELLA --- */
+.table-wrapper {
+    overflow-x: auto; /* Aggiunge scroll orizzontale su schermi piccoli */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+table thead th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #495057;
+}
+
+table tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* --- NUOVO STILE PER IL PULSANTE ELIMINA --- */
+.delete-button {
+    background-color: #e74c3c; /* Rosso per azioni distruttive */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* Rosso più scuro al passaggio del mouse */
+}

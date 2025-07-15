@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Insegnamenti</title>
+    <!-- Assicurati che il percorso a style.css sia corretto -->
+    <link rel="stylesheet" href="{{ url_for('manager_bp.static', filename='css/manager/teaching_management.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="page-header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia" class="logo">
+        <a href="#" class="logout-link">Logout</a>
+    </header>
+
+    <main class="main-content">
+
+        <!-- Sezione per mostrare i messaggi flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- SEZIONE 1: FORM PER AGGIUNGERE UN NUOVO INSEGNAMENTO -->
+        <div class="card-container">
+            <h1>Aggiungi Nuovo Insegnamento</h1>
+            <p class="subtitle">Compila i campi per creare un nuovo insegnamento.</p>
+
+            <!-- Il form ora invia una richiesta POST alla rotta corrente -->
+            <form action="{{ url_for('manager_bp.gestione_insegnamenti') }}" method="POST">
+                <!-- Campo nascosto per identificare l'azione -->
+                <input type="hidden" name="action" value="add">
+
+                <div class="form-group">
+                    <label for="idInsegnamento">ID Insegnamento</label>
+                    <input type="text" id="idInsegnamento" name="idInsegnamento" placeholder="Es. M-01" required>
+                </div>
+                <div class="form-group">
+                    <label for="nome">Nome Insegnamento</label>
+                    <input type="text" id="nome" name="nome" placeholder="Es. Storia dell'Arte Moderna" required>
+                </div>
+                
+                <!-- Menu a tendina popolato dinamicamente con i corsi dal DB -->
+                <div class="form-group">
+                    <label for="corso">Corso di Appartenenza</label>
+                    <select class="form-control" id="corso" name="corso" required>
+                        <option value="">Seleziona un corso...</option>
+                        {% for corso in corsi %}
+                            <option value="{{ corso.idCorso }}">{{ corso.nome_completo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="annoCorso">Anno di Corso</label>
+                        <select id="annoCorso" name="annoCorso" required>
+                            <option value="1">1° Anno</option>
+                            <option value="2">2° Anno</option>
+                            <option value="3">3° Anno</option>
+                            <option value="breve">Breve</option>
+                        </select>
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="durataOre">Durata (ore)</label>
+                        <input type="number" id="durataOre" name="durataOre" placeholder="Es. 60" min="1" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Aggiungi Insegnamento</button>
+            </form>
+        </div>
+
+        <!-- SEZIONE 2: ELENCO DEGLI INSEGNAMENTI ESISTENTI -->
+        <div class="card-container">
+            <h2>Elenco Insegnamenti</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome Insegnamento</th>
+                            <th>Corso</th>
+                            <th>Anno</th>
+                            <th>Ore</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ciclo per generare dinamicamente le righe della tabella -->
+                        {% for ins in insegnamenti %}
+                        <tr>
+                            <td>{{ ins.idInsegnamento }}</td>
+                            <td>{{ ins.nome_insegnamento }}</td>
+                            <td>{{ ins.nome_corso }} - {{ ins.tipologia_corso }}</td> 
+                            <td>{{ ins.anno_di_corso }}</td>
+                            <td>{{ ins.durata }}</td>
+                            <td>
+                                <form action="{{ url_for('manager_bp.gestione_insegnamenti') }}" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questo insegnamento dal piano di studi?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    
+                                    <input type="hidden" name="id_insegnamento_da_eliminare" value="{{ ins.idInsegnamento }}">
+                                    
+                                    <input type="hidden" name="id_corso_da_cui_eliminare" value="{{ ins.idCorso }}">
+                                    
+                                    <button type="submit" class="delete-button">Elimina</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliori. Tutti i diritti riservati.</p>
+    </footer>
+
+</body>
+</html>
