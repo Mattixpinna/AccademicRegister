@@ -156,13 +156,16 @@ body {
     background-color: #1d4ed8; /* hover:bg-blue-700 */
 }
 
-/* Piè di Pagina (Footer) */
-.main-footer {
-    background-color: #1f2937; /* bg-gray-800 */
-    color: #ffffff; /* text-white */
-    padding-top: 1rem; /* py-4 */
-    padding-bottom: 1rem; /* py-4 */
-    text-align: center; /* text-center */
-    border-top-left-radius: 0.5rem; /* rounded-t-lg */
-    border-top-right-radius: 0.5rem; /* rounded-t-lg */
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: auto; /* Assicura che il footer stia in basso */
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
 }

@@ -1,4 +1,3 @@
-/* --- Reset e Impostazioni Globali --- */
 * {
     margin: 0;
     padding: 0;
@@ -14,27 +13,14 @@ body {
     min-height: 100vh;
 }
 
-/* --- Header e Footer (coerenti con le altre pagine) --- */
-.header, .footer {
+.header {
     width: 100%;
     background-color: #ffffff;
     padding: 1rem 2rem;
     border-bottom: 1px solid #e0e0e0;
-}
-
-.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.footer {
-    text-align: center;
-    padding: 1.5rem;
-    font-size: 0.8rem;
-    color: #999;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: none;
 }
 
 .logo img {
@@ -48,7 +34,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* --- Contenuto Principale --- */
 main {
     flex-grow: 1;
     display: flex;
@@ -82,7 +67,6 @@ h1 {
     margin-bottom: 2.5rem;
 }
 
-/* --- Stili specifici per il Form --- */
 .presence-form {
     text-align: left;
 }
@@ -128,9 +112,9 @@ select {
 
 textarea {
     resize: vertical;
+    min-height: 100px;
 }
 
-/* --- NUOVI STILI PER IL TOGGLE SWITCH --- */
 .toggle-group {
     display: flex;
     align-items: center;
@@ -144,13 +128,13 @@ textarea {
     font-size: 1rem;
     color: #495057;
     cursor: pointer;
-    margin-bottom: 0; /* Sovrascrive lo stile generico della label */
+    margin-bottom: 0;
 }
 
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 50px; /* Leggermente più piccolo */
+    width: 50px;
     height: 28px;
     margin-bottom: 0;
 }
@@ -186,7 +170,7 @@ textarea {
 }
 
 input:checked + .slider {
-    background-color: #28a745; /* Verde per confermato */
+    background-color: #28a745;
 }
 
 input:focus + .slider {
@@ -196,7 +180,6 @@ input:focus + .slider {
 input:checked + .slider:before {
     transform: translateX(22px);
 }
-/* --- FINE STILI TOGGLE SWITCH --- */
 
 button[type="submit"] {
     width: 100%;
@@ -215,4 +198,50 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #3174db;
     transform: translateY(-2px);
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: auto;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* --- Media Query per Dispositivi Mobili --- */
+@media (max-width: 768px) {
+    main {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+    
+    .header {
+        padding: 0.8rem 1rem;
+    }
+
+    .logo img {
+        height: 35px;
+    }
+    
+    .toggle-label {
+        font-size: 0.9rem;
+    }
 }

@@ -1,0 +1,261 @@
+/*
+ * style.css
+ * Foglio di stile completo per la pagina di gestione docenti.
+ * Aggiornato per impilare i form verticalmente e per uno stile più pulito.
+ */
+
+/* --- RESET E STILI GLOBALI --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F9FAFB; /* bg-gray-50 */
+    color: #1F2937; /* text-gray-800 */
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #E5E7EB; /* border-gray-200 */
+    margin: 2rem 0;
+}
+
+/* --- LAYOUT PRINCIPALE --- */
+.main-container {
+    width: 100%;
+    max-width: 896px; /* Container più stretto per assomigliare all'immagine */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+}
+
+/* --- HEADER E FOOTER --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+header .logout {
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+header .logout:hover {
+    background-color: #f1f3f5;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr; /* Mantiene una singola colonna su tutte le dimensioni */
+    gap: 2rem; /* gap-8 */
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: auto; /* Assicura che il footer stia in basso */
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* --- TIPOGRAFIA --- */
+.main-title {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 600; /* font-semibold */
+    color: #111827; /* text-gray-900 */
+}
+
+.subtitle {
+    font-size: 1rem; /* text-base */
+    color: #6B7280; /* text-gray-500 */
+    margin-top: 0.5rem; /* mt-2 */
+}
+
+.section-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 1.5rem; /* mb-6 */
+    padding-bottom: 1rem; /* pb-4 */
+    border-bottom: 1px solid #E5E7EB; /* border-b */
+    color: #374151; /* text-gray-700 */
+}
+
+.subsection-title {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600; /* font-semibold */
+    color: #1F2937; /* text-gray-800 */
+    margin-bottom: 1rem;
+}
+
+/* --- SEZIONI E CARD --- */
+.form-section {
+    background-color: #ffffff;
+    padding: 2rem; /* p-8 */
+    border-radius: 0.5rem; /* Stile più simile all'immagine */
+    border: 1px solid #E5E7EB; /* Bordo semplice come nell'immagine */
+}
+
+/* --- FORM E INPUT --- */
+.form-layout > div:not(:first-child) {
+    margin-top: 1.5rem; /* space-y-6 */
+}
+
+.subsection-container > form:not(:first-child) {
+    margin-top: 2rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #374151; /* text-gray-700 */
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    box-sizing: border-box; /* Assicura che padding e border non aumentino la larghezza */
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem; /* mt-1 */
+    padding: 0.75rem 1rem;
+    background-color: #F9FAFB; /* bg-gray-50 */
+    border: 1px solid #D1D5DB; /* border-gray-300 */
+    border-radius: 0.375rem; /* rounded-md */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #2563EB; /* border-blue-600 */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* ring-blue-500 con opacità */
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem; /* gap-6 */
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 2rem;
+}
+
+/* --- BOTTONI --- */
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-primary { background-color: #2563EB; } /* bg-blue-600 */
+.btn-success { background-color: #16A34A; } /* bg-green-600 */
+.btn-danger { background-color: #DC2626; } /* bg-red-600 */
+.btn-warning { background-color: #D97706; } /* bg-yellow-500 */
+.btn-info { background-color: #0E7490; } /* bg-cyan-700 */
+
+
+/* --- TABELLE --- */
+.table-container {
+    overflow-x: auto;
+    margin-top: 2rem;
+}
+
+.results-table {
+    width: 100%; /* min-w-full */
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border: 1px solid #E5E7EB; /* border-gray-200 */
+    border-radius: 0.5rem; /* rounded-lg */
+    overflow: hidden; /* per applicare il border-radius */
+}
+
+.results-table th, .results-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.results-table thead {
+    background-color: #F9FAFB; /* bg-gray-50 */
+}
+
+.results-table th {
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* font-semibold */
+    color: #6B7280; /* text-gray-500 */
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* tracking-wider */
+}
+
+.results-table tbody tr {
+    border-top: 1px solid #E5E7EB; /* divide-y */
+}
+
+.results-table td {
+    font-size: 0.875rem; /* text-sm */
+    color: #374151; /* text-gray-700 */
+}
+
+/* --- BADGE DI STATO --- */
+.status-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1.25;
+    font-weight: 600; /* font-semibold */
+    border-radius: 9999px; /* rounded-full */
+}
+
+.status-presente {
+    background-color: #D1FAE5; /* bg-green-100 */
+    color: #065F46; /* text-green-800 */
+}
+
+.status-assente {
+    background-color: #FEE2E2; /* bg-red-100 */
+    color: #991B1B; /* text-red-800 */
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (min-width: 640px) { /* sm: */
+    .grid-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 768px) { /* md: */
+    .main-container {
+        padding: 2rem;
+    }
+    .main-title {
+        font-size: 2.25rem; /* md:text-4xl */
+    }
+}

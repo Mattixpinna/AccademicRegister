@@ -1,0 +1,271 @@
+/* --- RESET E STILI GLOBALI --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* --- HEADER E FOOTER --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+header .logout {
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+header .logout:hover {
+    background-color: #f1f3f5;
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: auto;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* --- CARD --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+}
+
+h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.text-muted {
+    color: #6c757d;
+    margin-bottom: 2rem;
+}
+
+/* --- MODULI E CAMPI DI INPUT --- */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: 'Nunito', sans-serif;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #fdfdff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+select[disabled] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* --- BOTTONI --- */
+.btn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary { background-color: #0d6efd; color: #ffffff; }
+.btn-primary:hover { background-color: #0b5ed7; }
+.btn-secondary { background-color: #6c757d; color: #ffffff; }
+.btn-secondary:hover { background-color: #5c636a; }
+.btn-danger { background-color: #dc3545; color: #ffffff; }
+.btn-danger:hover { background-color: #bb2d3b; }
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.button-group .btn {
+    width: auto;
+    flex-grow: 1;
+}
+
+/* --- ELEMENTI DINAMICI E TABELLE --- */
+.student-info {
+    padding: 1rem;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    font-size: 1.1em;
+}
+
+/* MODIFICA CHIAVE: Wrapper per la tabella */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.results-table th,
+.results-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    white-space: nowrap; /* Impedisce al testo di andare a capo, forzando lo scroll se necessario */
+}
+
+.results-table th {
+    background-color: #f8f9fa;
+    font-weight: 700;
+}
+
+.results-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Stile per le notifiche dinamiche */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.notification.show { opacity: 1; transform: translateY(0); }
+.notification.success { background-color: #28a745; }
+.notification.error { background-color: #dc3545; }
+.notification.warning { background-color: #ffc107; color: #333; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+    }
+
+    header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .card {
+        padding: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    /* Gestisce lo spazio nei form-row impilati */
+    .form-row .form-group:not(:last-child) {
+        margin-bottom: 1.5rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+    
+    /* Migliora la visualizzazione della tabella su mobile */
+    .results-table th,
+    .results-table td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Centra le notifiche su schermi piccoli */
+    .notification {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%) translateY(-20px);
+        width: 90%;
+        text-align: center;
+    }
+    .notification.show {
+        transform: translateX(-50%) translateY(0);
+    }
+}

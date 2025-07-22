@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Docenti</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manager/teacher_management.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('manager_bp.static', filename='images/logo.png') }}" alt="Logo Accademia" height="40">
+        </div>
+        <a href="{{ url_for('auth_bp.logout') }}" class="logout">Logout</a>
+    </header>
+
+    <div class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main class="main-content">
+
+            <!-- Sezione 1: Aggiungi Nuovo Docente -->
+            <section id="aggiungi-docente" class="form-section">
+                <h2 class="section-title">1. Aggiungi Nuovo Docente</h2>
+                <form action="{{ url_for('manager_bp.aggiungi_docente') }}" method="POST" class="form-layout">
+                    <div>
+                        <label for="idDocente" class="form-label">ID Docente</label>
+                        <input type="text" id="idDocente" name="idDocente" placeholder="Es. D0123" required class="form-input">
+                    </div>
+                    <div class="grid-container">
+                        <div>
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" id="nome" name="nome" placeholder="Mario" required class="form-input">
+                        </div>
+                        <div>
+                            <label for="cognome" class="form-label">Cognome</label>
+                            <input type="text" id="cognome" name="cognome" placeholder="Rossi" required class="form-input">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" placeholder="mario.rossi@universita.it" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required class="form-input">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Aggiungi Docente</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Sezione 2: Assegna Cattedre -->
+            <section id="assegna-cattedra" class="form-section">
+                <h2 class="section-title">2. Assegna Cattedra</h2>
+                <form action="{{ url_for('manager_bp.assegna_cattedra') }}" method="POST" class="form-layout">
+                    <div>
+                        <label for="docente_cattedra" class="form-label">Seleziona Docente</label>
+                        <select id="docente_cattedra" name="docente_cattedra" required class="form-input">
+                            <option value="">-- Seleziona un docente --</option>
+                            {% for docente in docenti %}
+                                <option value="{{ docente.idDocente }}">{{ docente.Nome }} {{ docente.Cognome }} ({{ docente.codice_docente }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="insegnamento_cattedra" class="form-label">Seleziona Insegnamento</label>
+                        <select id="insegnamento_cattedra" name="insegnamento_cattedra" required class="form-input">
+                            <option value="">-- Seleziona un insegnamento --</option>
+                            {% for insegnamento in insegnamenti %}
+                                <option value="{{ insegnamento.idInsegnamento }}">{{ insegnamento.Nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="anno_accademico" class="form-label">Anno Accademico</label>
+                        <input type="text" id="anno_accademico" name="anno_accademico" placeholder="Es. 2024/2025" required class="form-input">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Assegna Cattedra</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Sezione 3: Rimuovi / Solleva -->
+            <section id="rimuovi-solleva" class="form-section">
+                <h2 class="section-title">3. Rimuovi Docente o Cattedra</h2>
+                <div class="subsection-container">
+                    <form action="{{ url_for('manager_bp.rimuovi_docente') }}" method="POST">
+                        <h3 class="subsection-title">Rimuovi un docente dal sistema</h3>
+                        <label for="docente_da_rimuovere" class="form-label">Seleziona Docente</label>
+                        <select id="docente_da_rimuovere" name="docente_da_rimuovere" required class="form-input">
+                            <option value="">-- Seleziona un docente --</option>
+                            {% for docente in docenti %}
+                                <option value="{{ docente.idDocente }}">{{ docente.Nome }} {{ docente.Cognome }} ({{ docente.codice_docente }})</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-actions">
+                             <button type="submit" class="btn btn-danger">Rimuovi Docente</button>
+                        </div>
+                    </form>
+                    
+                    <hr>
+
+                    <form action="{{ url_for('manager_bp.solleva_da_cattedra') }}" method="POST">
+                        <h3 class="subsection-title">Solleva un docente da una cattedra</h3>
+                        <label for="cattedra_da_rimuovere" class="form-label">Seleziona Cattedra</label>
+                        <select id="cattedra_da_rimuovere" name="cattedra_da_rimuovere" required class="form-input">
+                            <option value="">-- Seleziona una cattedra --</option>
+                            {% for cattedra in cattedre %}
+                                <!-- CORREZIONE: Il valore ora è una chiave composita per identificare la riga -->
+                                <option value="{{ cattedra.idDocente }}_{{ cattedra.idInsegnamento }}_{{ cattedra.anno_accademico }}">
+                                    {{ cattedra.NomeDocente }} {{ cattedra.Cognome }} - {{ cattedra.NomeInsegnamento }} ({{ cattedra.anno_accademico }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-warning">Solleva da Cattedra</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Sezione 4: Verifica Andamento -->
+            <section id="verifica-andamento" class="form-section">
+                <h2 class="section-title">4. Verifica Andamento Docente</h2>
+                <!-- CORREZIONE: L'action punta alla rotta principale 'gestione_docenti' -->
+                <form action="{{ url_for('manager_bp.gestione_docenti') }}" method="GET" class="form-layout">
+                     <div>
+                        <label for="docente_andamento" class="form-label">Seleziona Docente</label>
+                        <select id="docente_andamento" name="docente_andamento" required class="form-input">
+                            <option value="">-- Seleziona un docente --</option>
+                            {% for docente in docenti %}
+                                <option value="{{ docente.idDocente }}" {% if docente.idDocente == id_docente_corrente %}selected{% endif %}>
+                                    {{ docente.Nome }} {{ docente.Cognome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                     <div>
+                        <label for="insegnamento_andamento" class="form-label">Seleziona Insegnamento</label>
+                        <select id="insegnamento_andamento" name="insegnamento_andamento" required class="form-input">
+                            <option value="">-- Seleziona un insegnamento --</option>
+                            {% for insegnamento in insegnamenti %}
+                                <option value="{{ insegnamento.idInsegnamento }}" {% if insegnamento.idInsegnamento == id_insegnamento_corrente %}selected{% endif %}>
+                                    {{ insegnamento.Nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                     <div>
+                        <label for="anno_di_corso" class="form-label">Seleziona Anno di Corso</label>
+                        <select id="anno_di_corso" name="anno_di_corso" required class="form-input">
+                            <option value="">-- Seleziona un anno di corso --</option>
+                            <option value="1" {% if anno_di_corso_corrente == 1 %}selected{% endif %}>1° Anno</option>
+                            <option value="2" {% if anno_di_corso_corrente == 2 %}selected{% endif %}>2° Anno</option>
+                            <option value="3" {% if anno_di_corso_corrente == 3 %}selected{% endif %}>3° Anno</option>
+                            <option value="Breve" {% if anno_di_corso_corrente == 'Breve' %}selected{% endif %}>Breve</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-info">Verifica Andamento</button>
+                    </div>
+                </form>
+
+                {% if risultati is not none %}
+                <div class="table-container">
+                    {% if docente_selezionato and insegnamento_selezionato %}
+                    <h3 class="subsection-title">
+                        Risultati per: {{ docente_selezionato.Nome }} {{ docente_selezionato.Cognome }} - {{ insegnamento_selezionato.Nome }}
+                    </h3>
+                    {% endif %}
+                    
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Giorno Lezione</th>
+                                <th>Presenza</th>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if risultati %}
+                                {% for risultato in risultati %}
+                                <tr>
+                                    <td>{{ risultato.giorno_lezione }}</td>
+                                    <td>
+                                        {% if risultato.presenza %}
+                                            <span class="status-badge status-presente">Presente</span>
+                                        {% else %}
+                                            <span class="status-badge status-assente">Assente</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ risultato.note if risultato.note else '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" style="text-align: center;">Nessun dato di docenza trovato per questa selezione.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </section>
+
+        </main>
+
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+</body>
+</html>

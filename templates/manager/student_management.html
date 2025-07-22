@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Studenti - Accademia</title>
+    <!-- Assicurati che il percorso del CSS sia corretto -->
+    <link rel="stylesheet" href="{{ url_for('manager_bp.static', filename='css/manager/student_management.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="notification-area"></div>
+
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('manager_bp.static', filename='images/logo.png') }}" alt="Logo Accademia" height="40">
+        </div>
+        <a href="{{ url_for('auth_bp.logout') }}" class="logout">Logout</a>
+    </header>
+
+    <main class="container">
+
+        <div class="card">
+            <h2>Registrazione e Iscrizione Studente</h2>
+            <p class="text-muted">Compila i campi per registrare un nuovo studente e iscriverlo a uno o più insegnamenti.</p>
+            <form id="form-registrazione">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="matricola-reg">Matricola</label>
+                        <input type="text" id="matricola-reg" placeholder="Es. 12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nome-reg">Nome</label>
+                        <input type="text" id="nome-reg" placeholder="Es. Mario" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="cognome-reg">Cognome</label>
+                        <input type="text" id="cognome-reg" placeholder="Es. Rossi" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="corso-reg">Corso di Appartenenza</label>
+                        <select id="corso-reg" required>
+                            <option value="" disabled selected>Seleziona un corso...</option>
+                            {% for corso in corsi %}
+                                <option value="{{ corso.idCorso }}">{{ corso.nome_completo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="anno-reg">Anno di Corso</label>
+                        <select id="anno-reg" required disabled>
+                            <option value="" disabled selected>Scegli prima un corso...</option>
+                            <option value="1">1° Anno</option>
+                            <option value="2">2° Anno</option>
+                            <option value="3">3° Anno</option>
+                            <option value="breve">Breve</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="insegnamento-reg">Insegnamento</label>
+                        <select id="insegnamento-reg" required disabled>
+                            <option value="" disabled selected>Scegli prima corso e anno...</option>
+                            <!-- MODIFICA: Opzioni popolate da JS, inclusa l'opzione "tutti" -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="anno-accademico-reg">Anno Accademico</label>
+                        <select id="anno-accademico-reg" required>
+                            <!-- Opzioni generate dinamicamente da JavaScript -->
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Registra e Iscrivi Studente</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Disiscrivi o Elimina Studente</h2>
+            <p class="text-muted">Inserisci la matricola per gestire le iscrizioni o eliminare uno studente.</p>
+            <form id="form-gestione">
+                <div class="form-group">
+                    <label for="matricola-gest">Matricola Studente</label>
+                    <input type="text" id="matricola-gest" placeholder="Cerca per matricola...">
+                </div>
+
+                <div id="info-studente-gest" class="student-info" style="display: none;">
+                    Studente: <strong id="nome-cognome-gest"></strong>
+                </div>
+
+                <div class="form-group">
+                    <label for="insegnamento-del">Seleziona l'iscrizione da rimuovere</label>
+                    <select id="insegnamento-del" disabled>
+                        <option value="" disabled selected>In attesa di selezione studente...</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="btn-disiscrivi" disabled>Disiscrivi</button>
+                    <button type="button" class="btn btn-danger" id="btn-elimina" disabled>Elimina Studente</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Situazione Presenze Studente</h2>
+            <p class="text-muted">Visualizza le ore di presenza di uno studente per ogni insegnamento a cui è iscritto.</p>
+            <div class="form-group">
+                <label for="matricola-presenze">Matricola Studente</label>
+                <input type="text" id="matricola-presenze" placeholder="Cerca per matricola per vedere le presenze...">
+            </div>
+             <div id="info-studente-presenze" class="student-info" style="display: none;">
+                Riepilogo presenze per: <strong id="nome-cognome-presenze"></strong>
+            </div>
+            <div id="presenze-results" style="display: none;">
+                 <table class="results-table">
+                     <thead>
+                         <tr>
+                             <th>Insegnamento</th>
+                             <th>Anno Accademico</th>
+                             <th>Ore di Presenza Svolte</th>
+                             <th>Ore Totali Previste</th>
+                         </tr>
+                     </thead>
+                     <tbody id="tabella-presenze-body"></tbody>
+                 </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Funzione per popolare dinamicamente l'anno accademico
+    function popolaAnniAccademici() {
+        const selectAnno = document.getElementById('anno-accademico-reg');
+        const oggi = new Date();
+        const annoSolareCorrente = oggi.getFullYear();
+        const meseCorrente = oggi.getMonth(); 
+        let annoInizioAccademico = (meseCorrente < 8) ? annoSolareCorrente - 1 : annoSolareCorrente;
+        const annoPrecedente = `${annoInizioAccademico - 1}/${annoInizioAccademico}`;
+        const annoAttuale = `${annoInizioAccademico}/${annoInizioAccademico + 1}`;
+        const annoSuccessivo = `${annoInizioAccademico + 1}/${annoInizioAccademico + 2}`;
+        selectAnno.innerHTML = '';
+        selectAnno.add(new Option(annoPrecedente, annoPrecedente));
+        selectAnno.add(new Option(annoAttuale, annoAttuale));
+        selectAnno.add(new Option(annoSuccessivo, annoSuccessivo));
+        selectAnno.value = annoAttuale;
+    }
+
+    popolaAnniAccademici();
+
+    // Riferimenti agli elementi del DOM
+    const formRegistrazione = document.getElementById('form-registrazione');
+    const selectCorsoReg = document.getElementById('corso-reg');
+    const selectAnnoReg = document.getElementById('anno-reg');
+    const selectInsegnamentoReg = document.getElementById('insegnamento-reg');
+    const inputMatricolaGest = document.getElementById('matricola-gest');
+    const infoStudenteGest = document.getElementById('info-studente-gest');
+    const nomeCognomeGest = document.getElementById('nome-cognome-gest');
+    const selectInsegnamentoDel = document.getElementById('insegnamento-del');
+    const btnDisiscrivi = document.getElementById('btn-disiscrivi');
+    const btnElimina = document.getElementById('btn-elimina');
+    const inputMatricolaPresenze = document.getElementById('matricola-presenze');
+    const infoStudentePresenze = document.getElementById('info-studente-presenze');
+    const nomeCognomePresenze = document.getElementById('nome-cognome-presenze');
+    const presenzeResults = document.getElementById('presenze-results');
+    const tabellaPresenzeBody = document.getElementById('tabella-presenze-body');
+
+    function showNotification(message, type = 'success') {
+        const notificationArea = document.getElementById('notification-area');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notificationArea.appendChild(notification);
+        setTimeout(() => notification.classList.add('show'), 10);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000); // Aumentato il tempo a 5 secondi per messaggi più lunghi
+    }
+    
+    function populateSelect(selectElement, options, placeholder) {
+        selectElement.innerHTML = `<option value="" disabled selected>${placeholder}</option>`;
+        options.forEach(option => {
+            const value = option.idInsegnamento;
+            let text = option.Nome;
+            let dataAttrs = '';
+            if (option.anno_di_corso && option.anno_accademico) {
+                text += ` (${option.anno_di_corso}° Anno - A.A. ${option.anno_accademico})`;
+                dataAttrs = `
+                    data-id-corso="${option.idCorso}" 
+                    data-anno-di-corso="${option.anno_di_corso}"
+                    data-anno-accademico="${option.anno_accademico}"
+                `;
+            }
+            selectElement.innerHTML += `<option value="${value}" ${dataAttrs}>${text}</option>`;
+        });
+        selectElement.disabled = false;
+    }
+
+    selectCorsoReg.addEventListener('change', () => {
+        selectAnnoReg.disabled = !selectCorsoReg.value;
+        selectInsegnamentoReg.disabled = true;
+        selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Scegli prima corso e anno...</option>';
+    });
+
+    // ### MODIFICA: Popolamento dinamico con opzione "Iscrivi a tutti" ###
+    selectAnnoReg.addEventListener('change', async () => {
+        const id_corso = selectCorsoReg.value;
+        const anno = selectAnnoReg.value;
+        if (!id_corso || !anno) {
+            selectInsegnamentoReg.disabled = true;
+            selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Scegli prima corso e anno...</option>';
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/manager/api/insegnamenti_per_corso?id_corso=${id_corso}&anno=${anno}`);
+            if (!response.ok) throw new Error('Errore di rete');
+            const insegnamenti = await response.json();
+            
+            // Svuota le opzioni precedenti e aggiunge il placeholder
+            selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Seleziona un\'opzione...</option>';
+
+            // Aggiunge l'opzione speciale per iscrivere a tutti gli insegnamenti
+            if (insegnamenti.length > 0) {
+                const opzioneTutti = new Option(`--- Iscrivi a tutti gli ${insegnamenti.length} insegnamenti di questo anno ---`, 'tutti');
+                opzioneTutti.style.fontWeight = 'bold';
+                opzioneTutti.style.backgroundColor = '#e0e7ff';
+                selectInsegnamentoReg.add(opzioneTutti);
+            }
+
+            // Popola con i singoli insegnamenti
+            insegnamenti.forEach(insegnamento => {
+                const option = new Option(insegnamento.Nome, insegnamento.idInsegnamento);
+                selectInsegnamentoReg.add(option);
+            });
+
+            selectInsegnamentoReg.disabled = false;
+        } catch (error) {
+            showNotification('Impossibile caricare gli insegnamenti.', 'error');
+            selectInsegnamentoReg.disabled = true;
+            selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Errore nel caricamento...</option>';
+        }
+    });
+
+    // ### MODIFICA: Gestione invio per iscrizione singola o massiva ###
+    formRegistrazione.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const idInsegnamentoSelezionato = selectInsegnamentoReg.value;
+        if (!idInsegnamentoSelezionato) {
+            showNotification('Per favore, seleziona un insegnamento o l\'opzione per iscrivere a tutti.', 'warning');
+            return;
+        }
+
+        const isIscrizioneMassiva = idInsegnamentoSelezionato === 'tutti';
+        const endpoint = isIscrizioneMassiva ? '/manager/api/studenti/iscrivi_tutti' : '/manager/api/studenti/iscrivi';
+
+        const formData = {
+            matricola: document.getElementById('matricola-reg').value,
+            nome: document.getElementById('nome-reg').value,
+            cognome: document.getElementById('cognome-reg').value,
+            id_corso: selectCorsoReg.value,
+            anno_di_corso: selectAnnoReg.value,
+            anno_accademico: document.getElementById('anno-accademico-reg').value
+        };
+
+        // Aggiunge l'ID insegnamento solo se non è un'iscrizione massiva
+        if (!isIscrizioneMassiva) {
+            formData.id_insegnamento = idInsegnamentoSelezionato;
+        }
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Errore sconosciuto');
+            
+            showNotification(result.message || 'Operazione completata!');
+            formRegistrazione.reset();
+            popolaAnniAccademici(); // Ripopola e reimposta il valore di default
+            selectAnnoReg.disabled = true;
+            selectInsegnamentoReg.disabled = true;
+            selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Scegli prima corso e anno...</option>';
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    });
+
+    async function fetchAndDisplayStudentData(matricola, formType) {
+        if (formType === 'gestione') {
+            infoStudenteGest.style.display = 'none';
+            selectInsegnamentoDel.innerHTML = '<option value="" disabled selected>In attesa...</option>';
+            selectInsegnamentoDel.disabled = true;
+            btnDisiscrivi.disabled = true;
+            btnElimina.disabled = true;
+        } else if (formType === 'presenze') {
+            infoStudentePresenze.style.display = 'none';
+            presenzeResults.style.display = 'none';
+            tabellaPresenzeBody.innerHTML = '';
+        }
+
+        if (!matricola) return;
+
+        try {
+            const studentResponse = await fetch(`/manager/api/studenti/${matricola}`);
+            if (!studentResponse.ok) {
+                 if (studentResponse.status === 404) throw new Error('Studente non trovato.');
+                 throw new Error('Errore recupero dati studente.');
+            }
+            const studente = await studentResponse.json();
+            
+            if (formType === 'gestione') {
+                nomeCognomeGest.textContent = `${studente.nome} ${studente.cognome}`;
+                infoStudenteGest.style.display = 'block';
+                populateSelect(selectInsegnamentoDel, studente.iscrizioni, 'Seleziona un\'iscrizione...');
+                btnDisiscrivi.disabled = false;
+                btnElimina.disabled = false;
+            }
+            
+            if (formType === 'presenze') {
+                nomeCognomePresenze.textContent = `${studente.nome} ${studente.cognome}`;
+                infoStudentePresenze.style.display = 'block';
+                const presenzeResponse = await fetch(`/manager/api/studenti/${matricola}/presenze`);
+                if (!presenzeResponse.ok) throw new Error('Errore recupero presenze.');
+                const presenze = await presenzeResponse.json();
+                tabellaPresenzeBody.innerHTML = '';
+                if (presenze.length > 0) {
+                    presenze.forEach(p => {
+                        tabellaPresenzeBody.innerHTML += `
+                            <tr>
+                                <td>${p.nome_insegnamento}</td>
+                                <td>${p.anno_accademico}</td>
+                                <td>${parseFloat(p.ore_svolte).toFixed(2)}</td>
+                                <td>${p.ore_totali_previste}</td>
+                            </tr>`;
+                    });
+                } else {
+                    tabellaPresenzeBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nessuna iscrizione o presenza trovata.</td></tr>';
+                }
+                presenzeResults.style.display = 'block';
+            }
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
+    }
+    
+    inputMatricolaGest.addEventListener('blur', () => fetchAndDisplayStudentData(inputMatricolaGest.value, 'gestione'));
+    inputMatricolaPresenze.addEventListener('blur', () => fetchAndDisplayStudentData(inputMatricolaPresenze.value, 'presenze'));
+
+    btnDisiscrivi.addEventListener('click', async () => {
+        const matricola = inputMatricolaGest.value;
+        const selectedOption = selectInsegnamentoDel.options[selectInsegnamentoDel.selectedIndex];
+        
+        if (!matricola || !selectedOption || !selectedOption.value) {
+            showNotification('Selezionare uno studente e un\'iscrizione valida.', 'warning');
+            return;
+        }
+        
+        const payload = {
+            matricola: matricola,
+            id_insegnamento: selectedOption.value,
+            id_corso: selectedOption.dataset.idCorso,
+            anno_di_corso: selectedOption.dataset.annoDiCorso,
+            anno_accademico: selectedOption.dataset.annoAccademico
+        };
+
+        if (confirm(`Disiscrivere lo studente dall'insegnamento selezionato per l'A.A. ${payload.anno_accademico}?`)) {
+            try {
+                const response = await fetch('/manager/api/studenti/disiscrivi', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || result.warning);
+                
+                showNotification(result.message);
+                fetchAndDisplayStudentData(matricola, 'gestione');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+    });
+
+    btnElimina.addEventListener('click', async () => {
+        const matricola = inputMatricolaGest.value;
+        if (!matricola) return;
+        if (confirm(`ATTENZIONE: Eliminare lo studente con matricola ${matricola} e tutti i dati associati? L'operazione è irreversibile.`)) {
+            try {
+                const response = await fetch('/manager/api/studenti/elimina', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ matricola })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+                showNotification(result.message);
+                inputMatricolaGest.value = '';
+                fetchAndDisplayStudentData('', 'gestione');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>

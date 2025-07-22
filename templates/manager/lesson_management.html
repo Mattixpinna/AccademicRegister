@@ -41,6 +41,16 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="anno_di_corso">Anno di Corso</label>
+                    <select id="anno_di_corso" name="anno_di_corso" required>
+                        <option value="">Seleziona un anno...</option>
+                        <option value="1">1° Anno</option>
+                        <option value="2">2° Anno</option>
+                        <option value="3">3° Anno</option>
+                        <option value="Breve">Breve</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="aula">Aula</label>
                     <input type="text" id="aula" name="aula" placeholder="Es. Aula 5, Laboratorio B" required>
                 </div>
@@ -70,6 +80,7 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h3 id="modalTitle"></h3>
+            <p><strong>Anno di Corso:</strong> <span id="modalCourseYear"></span></p>
             <p><strong>Inizio:</strong> <span id="modalStart"></span></p>
             <p><strong>Fine:</strong> <span id="modalEnd"></span></p>
             <p><strong>Aula:</strong> <span id="modalAula"></span></p>
@@ -81,11 +92,12 @@
         </div>
     </div>
 
-    <footer class="page-footer">
+    <footer class="footer">
         <p>© 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
     </footer>
 
     <script>
+        // Lo script rimane invariato
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var modal = document.getElementById('eventModal');
@@ -112,6 +124,7 @@
                     document.getElementById('modalStart').innerText = startDate;
                     document.getElementById('modalEnd').innerText = endDate;
                     document.getElementById('modalAula').innerText = info.event.extendedProps.extended_aula;
+                    document.getElementById('modalCourseYear').innerText = info.event.extendedProps.course_year || 'Non specificato';
                     document.getElementById('idLezioneDaEliminare').value = info.event.id;
     
                     modal.style.display = 'block';

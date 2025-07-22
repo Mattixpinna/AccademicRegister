@@ -35,7 +35,7 @@
                         <select name="lezione" id="lezione-select" required>
                             <option value="" disabled selected>-- Lezioni da firmare --</option>
                             {% for lezione in lezioni %}
-                                <option value="{{ lezione.idLezione }}">{{ lezione.Nome }} - {{ lezione.OraInizio_formatted }}</option>
+                                <option value="{{ lezione.idLezione }}">{{ lezione.Nome }} - {{ lezione.OraInizio_formatted }} - Anno: {{ lezione.anno_di_corso }}</option>
                             {% else %}
                                 <option value="" disabled>Nessuna lezione da firmare per oggi.</option>
                             {% endfor %}

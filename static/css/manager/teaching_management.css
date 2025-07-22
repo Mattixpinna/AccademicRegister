@@ -1,4 +1,3 @@
-/* --- Reset e Stili Globali --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,7 +13,6 @@ body {
     min-height: 100vh;
 }
 
-/* --- Layout Header, Main, Footer --- */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -38,27 +36,33 @@ body {
 .main-content {
     flex-grow: 1;
     display: flex;
-    flex-direction: column; /* Impila le card verticalmente */
+    flex-direction: column;
     align-items: center;
     padding: 40px 20px;
-    gap: 30px; /* Spazio tra il form e la tabella */
+    gap: 30px;
 }
 
-.page-footer {
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
     text-align: center;
-    padding: 20px;
-    color: #888;
-    font-size: 0.875rem;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: auto;
 }
 
-/* --- Stile delle "Card" contenitori --- */
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
 .card-container {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 800px; /* Larghezza maggiore per contenere la tabella */
+    max-width: 800px;
 }
 
 .card-container h1, .card-container h2 {
@@ -77,11 +81,20 @@ body {
     margin-bottom: 30px;
 }
 
-/* --- Stili per il Form (invariati) --- */
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; font-weight: 500; color: #34495e; margin-bottom: 8px; }
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: #34495e;
+    margin-bottom: 8px;
+}
+
 .form-group input[type="text"],
 .form-group input[type="number"],
+.form-group input[type="date"],
 .form-group select {
     width: 100%;
     padding: 12px 15px;
@@ -90,14 +103,26 @@ body {
     font-size: 1rem;
     color: #333;
     transition: border-color 0.3s, box-shadow 0.3s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: white;
 }
+
 .form-group input:focus, .form-group select:focus {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
-.form-row { display: flex; gap: 20px; }
-.half-width { flex: 1; }
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.half-width {
+    flex: 1;
+}
 
 .submit-button {
     width: 100%;
@@ -112,11 +137,13 @@ body {
     margin-top: 10px;
     transition: background-color 0.3s ease;
 }
-.submit-button:hover { background-color: #2980b9; }
 
-/* --- NUOVI STILI PER LA TABELLA --- */
+.submit-button:hover {
+    background-color: #2980b9;
+}
+
 .table-wrapper {
-    overflow-x: auto; /* Aggiunge scroll orizzontale su schermi piccoli */
+    overflow-x: auto;
 }
 
 table {
@@ -142,9 +169,8 @@ table tbody tr:hover {
     background-color: #f1f3f5;
 }
 
-/* --- NUOVO STILE PER IL PULSANTE ELIMINA --- */
 .delete-button {
-    background-color: #e74c3c; /* Rosso per azioni distruttive */
+    background-color: #e74c3c;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -156,5 +182,44 @@ table tbody tr:hover {
 }
 
 .delete-button:hover {
-    background-color: #c0392b; /* Rosso più scuro al passaggio del mouse */
+    background-color: #c0392b;
+}
+
+/* --- Media Query per Dispositivi Mobili --- */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 15px 20px;
+    }
+
+    .main-content {
+        padding: 20px 15px;
+    }
+
+    .card-container {
+        padding: 20px;
+    }
+
+    .card-container h1 { font-size: 1.5rem; }
+    .card-container h2 { font-size: 1.25rem; }
+
+    .card-container .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
+
+    .form-row {
+        flex-direction: column; /* Impila i campi del form verticalmente */
+        gap: 0; /* Rimuovi il gap orizzontale */
+    }
+
+    /* Aggiungi un margine inferiore a tutti i campi tranne l'ultimo per creare spazio verticale */
+    .form-row .form-group:not(:last-child) {
+        margin-bottom: 20px;
+    }
+
+    /* Ottimizza la tabella per schermi piccoli */
+    table th, table td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+    }
 }

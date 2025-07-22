@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session
-from datetime import date
+from datetime import date, datetime
 import pymysql.cursors
 from functools import wraps
 
@@ -20,12 +20,10 @@ def get_db_connection():
         print(f"Errore di connessione al database: {e}")
         return None
 
-# --- MODIFICA: Decorator per i docenti reso più robusto ---
+# --- Decorator per i docenti ---
 def teacher_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Controlla il ruolo in modo non sensibile alle maiuscole/minuscole.
-        # str() gestisce il caso in cui la sessione sia vuota.
         if str(session.get('user_role')).lower() != 'docente':
             return redirect(url_for('auth_bp.login'))
         return f(*args, **kwargs)
@@ -99,6 +97,7 @@ def serve_registra_presenze_page():
     studenti = []
     try:
         with connection.cursor() as cursor:
+            # Controlla che il docente sia autorizzato per questa lezione
             sql_auth_check = """
                 SELECT L.idLezione FROM Lezione L
                 JOIN Cattedra C ON L.insegnamento = C.insegnamento
@@ -108,6 +107,7 @@ def serve_registra_presenze_page():
             if cursor.fetchone() is None:
                 return "Accesso non autorizzato a questa lezione.", 403
 
+            # Recupera i dettagli della lezione
             sql_lezione = """
                 SELECT I.Nome, L.ora_inizio FROM Lezione L
                 JOIN Insegnamento I ON L.insegnamento = I.idInsegnamento
@@ -124,14 +124,31 @@ def serve_registra_presenze_page():
                     'ora': lezione_raw['ora_inizio'].strftime('%H:%M')
                 }
 
-            sql_studenti = """
-                SELECT S.matricola, S.Nome, S.Cognome FROM Studente S
-                JOIN Iscrizione I ON S.matricola = I.studente
-                JOIN Lezione L ON I.insegnamento = L.insegnamento
-                WHERE L.idLezione = %s ORDER BY S.Cognome, S.Nome
-            """
-            cursor.execute(sql_studenti, (id_lezione,))
-            studenti = cursor.fetchall()
+                # ### INIZIO MODIFICA ###
+                # 1. Calcola l'anno accademico basandosi sulla data della lezione
+                data_lezione = lezione_raw['ora_inizio']
+                anno_lezione = data_lezione.year
+                mese_lezione = data_lezione.month
+                
+                if mese_lezione >= 9:
+                    anno_accademico_lezione = f"{anno_lezione}/{anno_lezione + 1}"
+                else:
+                    anno_accademico_lezione = f"{anno_lezione - 1}/{anno_lezione}"
+
+                # 2. Modifica la query per filtrare gli studenti per l'anno accademico corretto
+                sql_studenti = """
+                    SELECT S.matricola, S.Nome, S.Cognome 
+                    FROM Studente S
+                    JOIN Iscrizione I ON S.matricola = I.studente
+                    JOIN Lezione L ON I.insegnamento = L.insegnamento
+                    WHERE L.idLezione = %s AND I.anno_accademico = %s
+                    AND L.anno_di_corso = I.anno_di_corso
+                    ORDER BY S.Cognome, S.Nome
+                """
+                cursor.execute(sql_studenti, (id_lezione, anno_accademico_lezione))
+                studenti = cursor.fetchall()
+                # ### FINE MODIFICA ###
+                
     except pymysql.Error as e:
         print(f"Errore durante il recupero dei dati per l'appello: {e}")
     finally:
@@ -195,7 +212,7 @@ def serve_firma_presenza_page():
     try:
         with connection.cursor() as cursor:
             sql = """
-                SELECT L.idLezione, I.Nome, TIME(L.ora_inizio) AS OraInizio
+                SELECT L.idLezione, I.Nome, TIME(L.ora_inizio) AS OraInizio, L.anno_di_corso
                 FROM Lezione L
                 JOIN Insegnamento I ON L.insegnamento = I.idInsegnamento
                 JOIN Cattedra C ON I.idInsegnamento = C.insegnamento
