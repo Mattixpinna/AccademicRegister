@@ -2,6 +2,14 @@
  * Reset e Stili Generali
  * =================================
  */
+
+/* CORREZIONE CHIAVE: Imposta un box-model più intuitivo per tutti gli elementi */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -28,61 +36,29 @@ h1, h2, p {
 }
 
 /* * =================================
- * Header
+ * Header (Layout corretto con logo a sx e logout a dx)
  * =================================
  */
-.main-header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 15px 0;
+.header {
     width: 100%;
-}
-
-.header-container {
+    background-color: #ffffff;
+    padding: 1rem 2rem; /* Il padding ora non causerà overflow */
+    border-bottom: 1px solid #e0e0e0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Mantiene gli elementi ai lati opposti */
     align-items: center;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    /* Il flex-basis e text-align aiutano a bilanciare gli spazi */
-    flex: 1 1 0;
 }
 
 .logo img {
-    height: 100px;
-    /* Ho rimosso il margine destro per un controllo più preciso con flexbox */
+    height: 40px;
+    display: block;
 }
 
-.header-title {
-    font-weight: 600;
-    font-size: 30px;
-    color: #2c3e50;
-    text-align: center;
-    flex: 2 1 0; /* Dà più spazio al titolo */
-}
-
-.main-nav {
-    display: flex;
-    justify-content: flex-end;
-    flex: 1 1 0;
-}
-
-.main-nav a {
-    font-size: 20px;
-    font-weight: 500;
+.logout-link {
+    text-decoration: none;
     color: #555;
-    transition: color 0.3s ease;
-    padding: 8px 16px;
-    border: 1px solid transparent;
-    border-radius: 6px;
-}
-
-.main-nav a:hover {
-    color: #0056b3;
-    background-color: #f0f0f0;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 /* * =================================
@@ -105,30 +81,31 @@ h1, h2, p {
 .dashboard-subtitle {
     font-size: 1.4rem;
     color: #7f8c8d;
-    margin-bottom: 70px;
+    margin-bottom: 120px;
 }
 
-/* * =================================
- * Sezione Cards Interattive
- * =================================
- */
 .dashboard-cards {
     display: flex;
     justify-content: center;
-    gap: 60px;
+    gap: 80px;
     flex-wrap: wrap;
+    /* MODIFICA: Rimuovendo 'align-items: flex-start', le card si allungheranno
+       automaticamente alla stessa altezza (comportamento di default 'stretch'). */
 }
 
 .card {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    padding: 50px;
-    width: 370px;
-    height: 370px;
+    padding: 40px;
+    width: 420px;
+    height: 420px; /* Altezza fissa per uniformità */
     text-align: center;
     border: 1px solid #e0e0e0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Queste regole sono fondamentali per far funzionare l'allineamento interno */
+    display: flex;
+    flex-direction: column;
 }
 
 .card:hover {
@@ -137,8 +114,9 @@ h1, h2, p {
 }
 
 .card-icon {
-    margin-top: 35px;
-    margin-bottom: 55px;
+    /* MODIFICA: Ridotti i margini per bilanciare il layout */
+    margin-top: 0;
+    margin-bottom: 30px;
     color: #4A90E2; /* Blu primario */
 }
 
@@ -150,15 +128,18 @@ h1, h2, p {
 .card-title {
     font-size: 2.5rem;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     color: #2c3e50;
 }
 
 .card-description {
-    font-size: 1.25rem;
+    /* MODIFICA: Ridotta leggermente la dimensione del font */
+    font-size: 1.1rem; 
     color: #7f8c8d;
     line-height: 1.6;
     margin-bottom: 0;
+    /* Aggiunta: Permette alla descrizione di occupare lo spazio rimanente se necessario */
+    flex-grow: 1; 
 }
 
 /* * =================================

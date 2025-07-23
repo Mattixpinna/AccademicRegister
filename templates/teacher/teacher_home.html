@@ -11,22 +11,14 @@
 </head>
 <body>
 
-    <!-- Header della Pagina -->
-    <header class="main-header">
-        <div class="container header-container">
-            <!-- Logo a sinistra -->
-            <div class="logo">
-                <img src="../../static/images/logo.png" alt="Logo Accademia d'Arte di Cagliari">
-            </div>
-            <!-- Titolo al centro -->
-            <div class="header-title">
-                Accademia d'Arte di Cagliari
-            </div>
-            <!-- Navigazione a destra -->
-            <nav class="main-nav">
-                <a href="{{ url_for('auth_bp.logout') }}">Logout</a>
-            </nav>
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" height="40">
         </div>
+        <nav>
+            <!-- CORREZIONE 1: Aggiunto il link corretto per il logout -->
+            <a href="{{ url_for('auth_bp.logout') }}" class="logout-link">Logout</a>
+        </nav>
     </header>
 
     <!-- Contenuto Principale -->

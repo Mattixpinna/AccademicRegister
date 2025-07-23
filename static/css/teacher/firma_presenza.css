@@ -217,7 +217,7 @@ button[type="submit"]:hover {
 /* --- Media Query per Dispositivi Mobili --- */
 @media (max-width: 768px) {
     main {
-        padding: 1rem;
+        padding: 1.5rem;
     }
 
     .card {
