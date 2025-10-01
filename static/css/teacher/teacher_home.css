@@ -50,7 +50,7 @@ h1, h2, p {
 }
 
 .logo img {
-    height: 40px;
+    height: 55px;
     display: block;
 }
 
@@ -58,7 +58,7 @@ h1, h2, p {
     text-decoration: none;
     color: #555;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 /* * =================================
@@ -115,7 +115,7 @@ h1, h2, p {
 
 .card-icon {
     /* MODIFICA: Ridotti i margini per bilanciare il layout */
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 30px;
     color: #4A90E2; /* Blu primario */
 }

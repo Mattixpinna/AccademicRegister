@@ -24,14 +24,18 @@ body {
 }
 
 .logo img {
-    height: 40px;
+    height: 55px;
 }
 
 .logout-link {
     text-decoration: none;
     color: #555;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
+}
+
+.logout-link:hover {
+    color: #f1f3f5;
 }
 
 main {
@@ -45,6 +49,62 @@ main {
 .container {
     width: 100%;
     max-width: 900px;
+}
+
+/* Stili per i messaggi di feedback (flash messages) */
+.flash-messages {
+    width: 80%;
+    margin: 1rem auto;
+    z-index: 1000;
+}
+
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+/* Stile per il bottone di chiusura */
+.alert .close-btn {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.alert .close-btn:hover {
+    color: #eee;
+}
+
+/* Colori specifici per categoria */
+
+.alert.alert-success {
+    background-color: #28a745; /* Verde */
+}
+
+.alert.alert-error {
+    background-color: #dc3545; /* Rosso */
+}
+
+.alert.alert-warning {
+    background-color: #ffc107; /* Giallo */
+    color: #333;
+}
+
+/* === NUOVA REGOLA DA AGGIUNGERE === */
+.alert.alert-info {
+    background-color: #0d6efd; /* Blu informativo */
 }
 
 .card {
@@ -203,5 +263,115 @@ th {
     .confirm-button {
         width: 100%; /* Occupa tutta la larghezza per essere più facile da premere */
         padding: 0.9rem 1.5rem;
+    }
+}
+
+/* --- STILI PER IL PULSANTE ORARIO E MODALE --- */
+
+/* Stile per il pulsante "Imposta" nella tabella */
+.time-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 90px;
+}
+
+.time-button:hover {
+    background-color: #5a6268;
+}
+
+/* Stile per il pulsante quando un orario è stato impostato */
+.time-button.is-set {
+    background-color: #17a2b8; /* Un colore diverso per indicare che il valore è stato impostato */
+    font-weight: 700;
+}
+
+/* Overlay per il modale */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Contenuto del modale */
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.modal-content p {
+    margin-bottom: 1.5rem;
+    color: #666;
+}
+
+#modal-time-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal-button {
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-button.save {
+    background-color: #3A86FF;
+    color: white;
+}
+.modal-button.save:hover {
+    background-color: #3174db;
+}
+
+.modal-button.cancel {
+    background-color: #e9ecef;
+    color: #333;
+}
+.modal-button.cancel:hover {
+    background-color: #d3d9df;
+}
+
+/* Adatta la tabella alla nuova colonna su mobile */
+@media (max-width: 768px) {
+    th, td {
+        padding: 0.7rem 0.4rem; /* Riduci ancora un po' il padding */
     }
 }

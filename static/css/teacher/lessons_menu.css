@@ -25,14 +25,14 @@ body {
 }
 
 .logo img {
-    height: 40px;
+    height: 55px;
 }
 
 .logout-link {
     text-decoration: none;
     color: #555;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
     transition: color 0.2s ease-in-out;
 }
 

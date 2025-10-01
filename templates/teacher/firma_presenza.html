@@ -18,12 +18,25 @@
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" height="40">
         </div>
         <nav>
-            <a href="#" class="logout-link">Logout</a>
+            <a href="{{ url_for('teacher_bp.serve_dashboard_page') }}" class="logout-link">Home</a>
         </nav>
     </header>
 
+
     <main>
         <div class="container">
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                                <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
             <div class="card">
                 <h1>Firma Presenza Lezione</h1>
                 <p class="subtitle">Seleziona la lezione e conferma la tua presenza per registrarla.</p>

@@ -24,14 +24,14 @@ body {
 }
 
 .logo img {
-    height: 40px;
+    height: 55px;
 }
 
 .logout-link {
     text-decoration: none;
     color: #555;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 main {
@@ -53,6 +53,60 @@ main {
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
     text-align: center;
+}
+
+/* Stili per i messaggi di feedback (flash messages) */
+.flash-messages {
+    width: 80%;
+    margin: 1rem auto;
+    z-index: 1000;
+}
+
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+/* Stile per il bottone di chiusura */
+.alert .close-btn {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.alert .close-btn:hover {
+    color: #eee;
+}
+
+/* Colori specifici per categoria */
+.alert.alert-success {
+    background-color: #28a745; /* Verde */
+}
+
+.alert.alert-error {
+    background-color: #dc3545; /* Rosso */
+}
+
+.alert.alert-warning {
+    background-color: #ffc107; /* Giallo */
+    color: #333; /* Testo scuro per leggibilità */
+}
+
+.alert.alert-warning .close-btn {
+    color: #333;
 }
 
 h1 {

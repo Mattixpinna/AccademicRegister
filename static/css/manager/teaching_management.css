@@ -17,20 +17,27 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
+    padding: 20px 40px;
     width: 100%;
     background-color: #fff;
     border-bottom: 1px solid #e9ecef;
 }
 
 .logo {
-    height: 35px;
+    height: 55px;
 }
 
 .logout-link {
     text-decoration: none;
     color: #555;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+.logout-link:hover {
+    background-color: #f1f3f5;
 }
 
 .main-content {
@@ -62,7 +69,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
 }
 
 .card-container h1, .card-container h2 {
@@ -82,7 +89,7 @@ body {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .form-group label {

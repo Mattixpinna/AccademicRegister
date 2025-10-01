@@ -18,7 +18,7 @@
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" height="40">
         </div>
         <nav>
-            <a href="#" class="logout-link">Logout</a>
+            <a href="{{ url_for('teacher_bp.serve_dashboard_page') }}" class="logout-link">Home</a>
         </nav>
     </header>
 

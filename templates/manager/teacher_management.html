@@ -72,7 +72,7 @@
                         <select id="docente_cattedra" name="docente_cattedra" required class="form-input">
                             <option value="">-- Seleziona un docente --</option>
                             {% for docente in docenti %}
-                                <option value="{{ docente.idDocente }}">{{ docente.Nome }} {{ docente.Cognome }} ({{ docente.codice_docente }})</option>
+                                <option value="{{ docente.idDocente }}">{{ docente.Nome }} {{ docente.Cognome }} ({{ docente.idDocente }})</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -105,7 +105,7 @@
                         <select id="docente_da_rimuovere" name="docente_da_rimuovere" required class="form-input">
                             <option value="">-- Seleziona un docente --</option>
                             {% for docente in docenti %}
-                                <option value="{{ docente.idDocente }}">{{ docente.Nome }} {{ docente.Cognome }} ({{ docente.codice_docente }})</option>
+                                <option value="{{ docente.idDocente }}">{{ docente.Nome }} {{ docente.Cognome }} ({{ docente.idDocente }})</option>
                             {% endfor %}
                         </select>
                         <div class="form-actions">
@@ -145,7 +145,7 @@
                             <option value="">-- Seleziona un docente --</option>
                             {% for docente in docenti %}
                                 <option value="{{ docente.idDocente }}" {% if docente.idDocente == id_docente_corrente %}selected{% endif %}>
-                                    {{ docente.Nome }} {{ docente.Cognome }}
+                                    {{ docente.Nome }} {{ docente.Cognome }} ({{ docente.idDocente }})
                                 </option>
                             {% endfor %}
                         </select>
