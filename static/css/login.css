@@ -169,6 +169,15 @@ body {
     font-size: 0.9rem;
 }
 
+.message-success {
+    color: #16a34a; /* Verde */
+    font-weight: 600;
+}
+.message-error {
+    color: #dc2626; /* Rosso */
+    font-weight: 600;
+}
+
 
 /* --- SEZIONE RESPONSIVE PER DISPOSITIVI MOBILI --- */
 @media (max-width: 768px) {

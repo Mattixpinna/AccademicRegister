@@ -1,55 +1,19 @@
-# from flask import Flask, render_template
-# from flask_cors import CORS
-# import os
-
-# # Blueprints from different modules
-# from auth_routes import auth_bp
-# from teacher_routes import teacher_bp
-# from manager_routes import manager_bp
-
-# def create_app():
-#     app = Flask(__name__, template_folder='templates', static_folder='static')
-    
-#     CORS(app)
-#     app.config['SECRET_KEY'] = os.urandom(24)
-
-#     # Register blueprints
-#     app.register_blueprint(auth_bp)
-#     app.register_blueprint(teacher_bp)
-#     app.register_blueprint(manager_bp)
-
-#     # Define a simple route for the home page
-#     @app.route('/')
-#     def home():
-#         return render_template('home.html')
-
-#     return app
-
-# # This block is executed only when you run the script directly
-# if __name__ == '__main__':
-#     app = create_app()
-#     app.run(debug=True, port=5000)
-
-
-
-
-
-
 from flask import Flask, render_template
+from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS
 import os
-
-# 1. Importa le estensioni e i blueprint
 from extensions import limiter
 from auth_routes import auth_bp
 from teacher_routes import teacher_bp
 from manager_routes import manager_bp
 from database import pool # Importa il pool per chiuderlo correttamente
 
+# crea l'istanza di CSRFProtect
+csrf = CSRFProtect()
+
+
 def create_app():
-    """
-    Application Factory: crea e configura l'istanza dell'applicazione Flask.
-    """
+    
     app = Flask(__name__, template_folder='templates', static_folder='static')
     
     # --- CONFIGURAZIONE DI SICUREZZA ---
@@ -64,12 +28,22 @@ def create_app():
     else:
         app.config['SECRET_KEY'] = secret
 
+    # cookies sicure
+    app.config.update(
+        SESSION_COOKIE_HTTPONLY=True, # previene accessi JS ai cookie
+        SESSION_COOKIE_SAMESITE='Lax',  # protezione CSRF di base
+        SESSION_COOKIE_SECURE=True  # assicura che i cookie siano inviati solo su HTTPS
+    )
+
     # Configurazione CORS
     # In sviluppo, '*' è accettabile. In produzione, specifica i domini.
     CORS(app, origins="*", supports_credentials=True)
 
-    # 2. Inizializza le estensioni con l'app
+    # inizializza le estensioni con l'app
     limiter.init_app(app)
+
+    # Inizializza CSRF protection
+    csrf.init_app(app)
 
     # --- REGISTRAZIONE DEI BLUEPRINT ---
     app.register_blueprint(auth_bp)

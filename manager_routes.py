@@ -3,6 +3,9 @@ from datetime import date, datetime
 import pymysql.cursors
 from functools import wraps
 from werkzeug.security import generate_password_hash
+import locale
+from calendar import monthrange
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Importa la funzione per la connessione dal modulo centralizzato
 from database import get_db_connection
@@ -482,37 +485,54 @@ def api_get_presenze_studente(matricola):
 
 
 
+
+
+
+
+
+
+
+
+
 # ==============================================================================
 # === INIZIO SEZIONE GESTIONE DOCENTI  =========================================
 # ==============================================================================
 
+try:
+    locale.setlocale(locale.LC_TIME, 'it_IT.UTF-8')
+except locale.Error:
+    locale.setlocale(locale.LC_TIME, 'Italian')
+
 @manager_bp.route('/docenti', methods=['GET'])
 @manager_required
 def gestione_docenti():
-    """
-    Pagina Unica: Carica i dati per i form e gestisce la visualizzazione dell'andamento.
-    """
     conn = get_db_connection()
     if not conn:
         flash("Errore di connessione al database.", "danger")
         return render_template('manager/teacher_management.html', docenti=[], insegnamenti=[], cattedre=[], risultati=None)
 
-    docenti, insegnamenti, cattedre, risultati = [], [], [], None
-    docente_selezionato, insegnamento_selezionato = None, None
+    # Recupera i parametri dalla URL in modo sicuro, convertendoli in interi
     id_docente_corrente = request.args.get('docente_andamento', type=int)
     id_insegnamento_corrente = request.args.get('insegnamento_andamento', type=int)
+    anno_di_corso_corrente = request.args.get('anno_di_corso')
+    mese_selezionato = request.args.get('mese')
+
+    
+    docenti, insegnamenti, cattedre, risultati = [], [], [], None
+    docente_selezionato, insegnamento_selezionato = None, None
+    ore_totali, nome_mese_corrente = None, None
 
     try:
         with conn.cursor(pymysql.cursors.DictCursor) as cursor:
-            # 1. Recupera sempre tutti i docenti per i menu
+            # Recupera sempre tutti i docenti per i menu
             cursor.execute("SELECT idDocente, Nome, Cognome FROM Docente WHERE ruolo = 'docente' ORDER BY Cognome, Nome")
             docenti = cursor.fetchall()
             
-            # 2. Recupera sempre tutti gli insegnamenti per i menu
+            # Recupera sempre tutti gli insegnamenti per i menu
             cursor.execute("SELECT idInsegnamento, Nome FROM Insegnamento ORDER BY Nome")
             insegnamenti = cursor.fetchall()
 
-            # 3. Recupera le cattedre per il menu di rimozione (senza idCattedra)
+            #  Recupera le cattedre per il menu di rimozione
             sql_cattedre = """
                 SELECT D.idDocente, I.idInsegnamento, C.anno_accademico,
                        D.Nome AS NomeDocente, D.Cognome, I.Nome AS NomeInsegnamento
@@ -524,20 +544,46 @@ def gestione_docenti():
             cursor.execute(sql_cattedre)
             cattedre = cursor.fetchall()
 
-            # 4. Se è stata fatta una ricerca per l'andamento, esegui la query
-            if id_docente_corrente and id_insegnamento_corrente:
+            #  Se è stata fatta una ricerca per l'andamento, esegui la query
+            if id_docente_corrente and id_insegnamento_corrente and anno_di_corso_corrente:
+                params = [id_docente_corrente, id_insegnamento_corrente, anno_di_corso_corrente]
+                # CORREZIONE: Rimuovi DATE_FORMAT per ottenere un oggetto datetime, non una stringa.
                 sql_andamento = """
-                    SELECT DATE_FORMAT(L.ora_inizio, '%%d/%%m/%%Y') AS giorno_lezione, D.presenza, D.note
+                    SELECT L.ora_inizio AS giorno_lezione, D.presenza, D.note
                     FROM Docenza D
                     JOIN Lezione L ON D.lezione = L.idLezione
-                    WHERE D.docente = %s AND L.insegnamento = %s
-                    ORDER BY L.ora_inizio DESC
+                    WHERE D.docente = %s AND L.insegnamento = %s AND L.anno_di_corso = %s
                 """
-                cursor.execute(sql_andamento, (id_docente_corrente, id_insegnamento_corrente))
-                risultati = cursor.fetchall()
                 
+                # Aggiungi filtro per mese se selezionato
+                if mese_selezionato:
+                    try:
+                        anno, mese = map(int, mese_selezionato.split('-'))
+                        start_date = datetime(anno, mese, 1)
+                        end_day = monthrange(anno, mese)[1]
+                        end_date = datetime(anno, mese, end_day, 23, 59, 59)
+                        
+                        sql_andamento += " AND L.ora_inizio BETWEEN %s AND %s"
+                        params.extend([start_date, end_date])
+                        nome_mese_corrente = start_date.strftime('%B %Y').capitalize()
+
+                    except (ValueError, IndexError):
+                        flash('Formato mese non valido. Usa YYYY-MM.', 'danger')
+                        mese_selezionato = None
+                
+                sql_andamento += " ORDER BY L.ora_inizio ASC"
+                cursor.execute(sql_andamento, params)
+                risultati = cursor.fetchall()
+
+                # Calcola le ore totali per il mese selezionato
+                if mese_selezionato and risultati:
+                    ore_per_lezione = 2  # Assumiamo 2 ore per ogni presenza
+                    ore_totali = sum(ore_per_lezione for r in risultati if r['presenza'])
+                
+                # Ora non è più necessario convertire con int() perché sono già numeri o None
                 docente_selezionato = next((d for d in docenti if d['idDocente'] == id_docente_corrente), None)
                 insegnamento_selezionato = next((i for i in insegnamenti if i['idInsegnamento'] == id_insegnamento_corrente), None)
+                
 
     except pymysql.Error as e:
         flash(f"Errore nel recupero dei dati: {e}", 'danger')
@@ -553,12 +599,15 @@ def gestione_docenti():
                            docente_selezionato=docente_selezionato,
                            insegnamento_selezionato=insegnamento_selezionato,
                            id_docente_corrente=id_docente_corrente,
-                           id_insegnamento_corrente=id_insegnamento_corrente)
+                           id_insegnamento_corrente=id_insegnamento_corrente,
+                           anno_di_corso_corrente=anno_di_corso_corrente,
+                           mese_corrente=mese_selezionato,
+                           ore_totali=ore_totali,
+                           nome_mese_corrente=nome_mese_corrente)
 
 @manager_bp.route('/docenti/aggiungi', methods=['POST'])
 @manager_required
 def aggiungi_docente():
-    # CORREZIONE: Legge 'idDocente' dal form invece di 'codice_docente'
     id_docente = request.form.get('idDocente')
     nome = request.form.get('nome')
     cognome = request.form.get('cognome')
@@ -569,25 +618,55 @@ def aggiungi_docente():
         flash('Tutti i campi sono obbligatori.', 'warning')
         return redirect(url_for('manager_bp.gestione_docenti'))
 
-    password_hash = generate_password_hash(password)
     conn = get_db_connection()
     if not conn:
         flash("Errore di connessione al database.", "danger")
         return redirect(url_for('manager_bp.gestione_docenti'))
 
     try:
-        with conn.cursor() as cursor:
-            # CORREZIONE: Inserisce il valore di idDocente fornito nel form
-            sql = "INSERT INTO Docente (idDocente, Nome, Cognome, Email, Password, ruolo) VALUES (%s, %s, %s, %s, %s, 'docente')"
-            cursor.execute(sql, (id_docente, nome, cognome, email, password_hash))
-            conn.commit()
-            flash('Nuovo docente aggiunto con successo!', 'success')
-    except pymysql.IntegrityError:
-        flash('Errore: ID Docente o email già esistente.', 'danger')
+        # Usiamo DictCursor per accedere ai campi per nome e rendere il codice più leggibile
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            # 1. Controlla se il docente con lo stesso ID esiste già
+            cursor.execute("SELECT * FROM Docente WHERE idDocente = %s", (id_docente,))
+            docente_esistente = cursor.fetchone()
+
+            if docente_esistente:
+                # 2. Docente trovato: verifica se i dati anagrafici corrispondono
+                dati_corrispondono = (docente_esistente['Nome'].lower() == nome.lower() and
+                                      docente_esistente['Cognome'].lower() == cognome.lower() and
+                                      docente_esistente['Email'].lower() == email.lower())
+
+                if not dati_corrispondono:
+                    flash(f"L'ID Docente '{id_docente}' esiste già ma i dati anagrafici non corrispondono.", 'danger')
+                else:
+                    # 3. Dati corrispondono: verifica se la password è cambiata
+                    if check_password_hash(docente_esistente['Password'], password):
+                        flash('I dati del docente sono invariati. Nessuna modifica apportata.', 'info')
+                    else:
+                        # La password è diversa, quindi la aggiorniamo (questo funge da "conferma")
+                        nuova_password_hash = generate_password_hash(password)
+                        cursor.execute("UPDATE Docente SET Password = %s WHERE idDocente = %s", (nuova_password_hash, id_docente))
+                        conn.commit()
+                        flash('Password del docente aggiornata con successo!', 'success')
+            else:
+                # 4. Docente non esiste: procedi con l'inserimento di un nuovo record
+                # Prima controlla che l'email non sia già usata da un altro ID
+                cursor.execute("SELECT idDocente FROM Docente WHERE Email = %s", (email,))
+                if cursor.fetchone():
+                    flash(f"L'email '{email}' è già utilizzata da un altro docente.", 'danger')
+                else:
+                    password_hash = generate_password_hash(password)
+                    sql = "INSERT INTO Docente (idDocente, Nome, Cognome, Email, Password, ruolo) VALUES (%s, %s, %s, %s, %s, 'docente')"
+                    cursor.execute(sql, (id_docente, nome, cognome, email, password_hash))
+                    conn.commit()
+                    flash('Nuovo docente aggiunto con successo!', 'success')
+
     except pymysql.Error as e:
-        flash(f"Errore durante l'inserimento del docente: {e}", 'danger')
+        conn.rollback() # Annulla le modifiche in caso di errore
+        flash(f"Errore durante l'operazione sul docente: {e}", 'danger')
     finally:
-        if conn: conn.close()
+        if conn:
+            conn.close()
             
     return redirect(url_for('manager_bp.gestione_docenti'))
 
@@ -639,11 +718,8 @@ def rimuovi_docente():
     
     try:
         with conn.cursor() as cursor:
-            # Prima rimuovi le dipendenze per evitare IntegrityError
             cursor.execute("DELETE FROM Cattedra WHERE docente = %s", (id_docente,))
             cursor.execute("DELETE FROM Docenza WHERE docente = %s", (id_docente,))
-            
-            # Ora rimuovi il docente
             cursor.execute("DELETE FROM Docente WHERE idDocente = %s", (id_docente,))
             conn.commit()
             flash('Docente e tutte le sue associazioni rimossi con successo.', 'success')
@@ -659,7 +735,6 @@ def rimuovi_docente():
 @manager_bp.route('/cattedre/rimuovi', methods=['POST'])
 @manager_required
 def solleva_da_cattedra():
-    # Il valore del form è una stringa combinata: "idDocente_idInsegnamento_annoAccademico"
     cattedra_key = request.form.get('cattedra_da_rimuovere')
     if not cattedra_key:
         flash('Selezionare una cattedra da cui sollevare il docente.', 'warning')
@@ -689,28 +764,6 @@ def solleva_da_cattedra():
         if conn: conn.close()
 
     return redirect(url_for('manager_bp.gestione_docenti'))
-
-
-
-@manager_bp.route('/docenti/andamento', methods=['POST'])
-@manager_required
-def ricerca_andamento_docente():
-    """
-    Gestisce la ricerca dell'andamento di un docente per un insegnamento specifico.
-    """
-    id_docente = request.form.get('docente_andamento')
-    id_insegnamento = request.form.get('insegnamento_andamento')
-    anno_di_corso = request.form.get('anno_di_corso')
-
-    if not id_docente or not id_insegnamento:
-        flash('Selezionare un docente e un insegnamento per visualizzare l\'andamento.', 'warning')
-        return redirect(url_for('manager_bp.gestione_docenti'))
-
-    return redirect(url_for('manager_bp.gestione_docenti', 
-                            docente_andamento=id_docente, 
-                            insegnamento_andamento=id_insegnamento,
-                            anno_di_corso=anno_di_corso))
-
 
 
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session, flash
-from datetime import date, datetime
+from datetime import date, datetime, time
 import pymysql.cursors
 from functools import wraps
 from database import get_db_connection
@@ -165,7 +165,7 @@ def salva_presenze():
         flash("Errore: ID Lezione non trovato.", 'error')
         return redirect(url_for('teacher_bp.serve_appello_page'))
 
-    # 1. Estrai tutti gli studenti segnati come 'presente'
+    # Estrai gli studenti segnati come 'presente'
     studenti_presenti_ids = {
         key.split('_')[1] for key, value in request.form.items()
         if key.startswith('studente_') and value == 'presente'
@@ -182,46 +182,59 @@ def salva_presenze():
     
     try:
         with connection.cursor() as cursor:
-            # 2. Recupera gli studenti GIÀ presenti nel DB per evitare duplicati
+            sql_lezione = "SELECT ora_inizio FROM Lezione WHERE idLezione = %s"
+            cursor.execute(sql_lezione, (id_lezione,))
+            lezione_db = cursor.fetchone()
+
+            if not lezione_db or not lezione_db.get('ora_inizio'):
+                flash("Errore: impossibile trovare l'orario di inizio per questa lezione.", 'error')
+                return redirect(url_for('teacher_bp.serve_registra_presenze_page', lezione=id_lezione))
+            
+            # L'orario viene restituito come oggetto time
+            orario_inizio_lezione = lezione_db['ora_inizio']
+
+            # Recupera gli studenti GIÀ presenti nel DB per evitare duplicati
             sql_gia_presenti = "SELECT studente FROM Presenza WHERE lezione = %s"
             cursor.execute(sql_gia_presenti, (id_lezione,))
             studenti_gia_presenti_ids = {str(item['studente']) for item in cursor.fetchall()}
             
-            # 3. Filtra per ottenere solo i NUOVI studenti da inserire
+            # Filtra per ottenere solo i NUOVI studenti da inserire
             studenti_nuovi_da_inserire_ids = studenti_presenti_ids - studenti_gia_presenti_ids
 
             if not studenti_nuovi_da_inserire_ids:
                 flash("Tutti gli studenti selezionati erano già stati segnati come presenti.", 'info')
                 return redirect(url_for('teacher_bp.serve_registra_presenze_page', lezione=id_lezione))
 
-            # 4. Prepara i dati per l'inserimento, gestendo l'orario
+            # Prepara i dati per l'inserimento
             dati_da_inserire = []
             oggi = date.today()
 
             for sid in studenti_nuovi_da_inserire_ids:
-                orario_form = request.form.get(f'orario_{sid}') # Es: '10:30'
+                orario_form = request.form.get(f'orario_{sid}')
 
                 if orario_form:
-                    # Se l'utente ha inserito un orario, combinalo con la data di oggi
+                    # Se l'utente ha inserito un orario, usa quello
                     try:
                         ore, minuti = map(int, orario_form.split(':'))
-                        orario_ingresso = datetime.combine(oggi, datetime.min.time()).replace(hour=ore, minute=minuti)
+                        orario_ingresso = datetime.combine(oggi, time(hour=ore, minute=minuti))
                     except (ValueError, TypeError):
-                        # Fallback in caso di formato non valido
-                        orario_ingresso = datetime.now()
+                        # Fallback in caso di formato non valido (puoi mantenerlo o cambiarlo)
+                        orario_ingresso = datetime.combine(oggi, orario_inizio_lezione)
                 else:
-                    # Altrimenti, usa l'orario attuale
-                    orario_ingresso = datetime.now()
+                    # ---> MODIFICA 2: Se non viene specificato un orario, combina la data
+                    # di oggi con l'orario di inizio della lezione recuperato prima.
+                    orario_ingresso = orario_inizio_lezione
                 
                 dati_da_inserire.append((sid, id_lezione, orario_ingresso))
 
-            # 5. Esegui l'inserimento
-            sql_insert = "INSERT INTO Presenza (studente, lezione, orario_ingresso) VALUES (%s, %s, %s)"
-            cursor.executemany(sql_insert, dati_da_inserire)
-            connection.commit()
-            
-            num_presenze = len(dati_da_inserire)
-            flash(f"{num_presenze} nuove presenze registrate con successo!", 'success')
+            # Esegui l'inserimento
+            if dati_da_inserire:
+                sql_insert = "INSERT INTO Presenza (studente, lezione, orario_ingresso) VALUES (%s, %s, %s)"
+                cursor.executemany(sql_insert, dati_da_inserire)
+                connection.commit()
+                
+                num_presenze = len(dati_da_inserire)
+                flash(f"{num_presenze} nuove presenze registrate con successo!", 'success')
 
     except pymysql.Error as e:
         print(f"ERRORE durante il salvataggio delle presenze: {e}")
@@ -232,6 +245,7 @@ def salva_presenze():
             connection.close()
             
     return redirect(url_for('teacher_bp.serve_registra_presenze_page', lezione=id_lezione))
+
 
 
 

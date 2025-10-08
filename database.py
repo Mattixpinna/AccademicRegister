@@ -1,16 +1,15 @@
 import pymysql.cursors
 from dbutils.pooled_db import PooledDB
 import os
+from dotenv import load_dotenv
 
-# --- GESTIONE CENTRALIZZATA DEL DATABASE CON POOL DI CONNESSIONI ---
-# Questo pool di connessioni viene creato UNA SOLA VOLTA e riutilizzato
-# da tutta l'applicazione, garantendo efficienza e stabilità.
+load_dotenv()  # Carica le variabili d'ambiente dal file .env
 
 # Legge le credenziali dalle variabili d'ambiente per maggiore sicurezza.
-DB_HOST = os.environ.get('DB_HOST', 'localhost')
-DB_USER = os.environ.get('DB_USER', 'root')
-DB_PASSWORD = os.environ.get('DB_PASSWORD', '23042005')
-DB_NAME = os.environ.get('DB_NAME', 'registro_accademico')
+DB_HOST = os.environ.get('DB_HOST')
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_NAME = os.environ.get('DB_NAME')
 
 try:
     pool = PooledDB(

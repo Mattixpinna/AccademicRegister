@@ -15,7 +15,7 @@
         <div class="logo">
             <img src="{{ url_for('manager_bp.static', filename='images/logo.png') }}" alt="Logo Accademia" height="40">
         </div>
-        <a href="{{ url_for('auth_bp.logout') }}" class="logout">Logout</a>
+        <a href="{{ url_for('manager_bp.dashboard') }}" class="logout">Home</a>
     </header>
 
     <div class="main-container">
@@ -121,7 +121,6 @@
                         <select id="cattedra_da_rimuovere" name="cattedra_da_rimuovere" required class="form-input">
                             <option value="">-- Seleziona una cattedra --</option>
                             {% for cattedra in cattedre %}
-                                <!-- CORREZIONE: Il valore ora è una chiave composita per identificare la riga -->
                                 <option value="{{ cattedra.idDocente }}_{{ cattedra.idInsegnamento }}_{{ cattedra.anno_accademico }}">
                                     {{ cattedra.NomeDocente }} {{ cattedra.Cognome }} - {{ cattedra.NomeInsegnamento }} ({{ cattedra.anno_accademico }})
                                 </option>
@@ -137,7 +136,6 @@
             <!-- Sezione 4: Verifica Andamento -->
             <section id="verifica-andamento" class="form-section">
                 <h2 class="section-title">4. Verifica Andamento Docente</h2>
-                <!-- CORREZIONE: L'action punta alla rotta principale 'gestione_docenti' -->
                 <form action="{{ url_for('manager_bp.gestione_docenti') }}" method="GET" class="form-layout">
                      <div>
                         <label for="docente_andamento" class="form-label">Seleziona Docente</label>
@@ -171,6 +169,10 @@
                             <option value="Breve" {% if anno_di_corso_corrente == 'Breve' %}selected{% endif %}>Breve</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="mese" class="form-label">Seleziona Mese</label>
+                        <input type="month" id="mese" name="mese" class="form-input" value="{{ mese_corrente if mese_corrente else '' }}">
+                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-info">Verifica Andamento</button>
                     </div>
@@ -184,6 +186,13 @@
                     </h3>
                     {% endif %}
                     
+                    <!-- NUOVO: Aggiunta visualizzazione ore totali -->
+                    {% if mese_corrente and ore_totali is not none %}
+                    <p class="total-hours-summary">
+                        Ore totali nel mese di <strong>{{ nome_mese_corrente }}</strong>: <strong>{{ ore_totali }}</strong>
+                    </p>
+                    {% endif %}
+
                     <table class="results-table">
                         <thead>
                             <tr>
@@ -196,7 +205,7 @@
                             {% if risultati %}
                                 {% for risultato in risultati %}
                                 <tr>
-                                    <td>{{ risultato.giorno_lezione }}</td>
+                                    <td>{{ risultato.giorno_lezione.strftime('%d/%m/%Y') }}</td>
                                     <td>
                                         {% if risultato.presenza %}
                                             <span class="status-badge status-presente">Presente</span>
