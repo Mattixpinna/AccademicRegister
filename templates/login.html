@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Registro Accademico</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-    
 </head>
 <body class="login-body-layout">
     <header class="login-header">
@@ -19,20 +17,21 @@
     <main class="login-main-content">
         <div class="login-form-container">
             <h2 class="login-heading">Accedi al tuo account</h2>
-            <form id="login-form" class="login-form">
 
-                {{ form.csrf_token }}
+            <form id="login-form" class="login-form" method="POST" novalidate>
 
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" id="email" name="email" class="form-input" placeholder="Inserisci la tua email" required>
+                {{ form.hidden_tag() }} <div class="form-group">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-input", placeholder="Inserisci la tua email", required=True) }}
                 </div>
                 <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="Inserisci la tua password" required>
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-input", placeholder="Inserisci la tua password", required=True) }}
                 </div>
                 <button type="submit" class="login-button">Accedi</button>
             </form>
+            
+            <div id="error-container" class="error-container"></div>
             <div id="message-container"></div>
         </div>
     </main>
@@ -43,36 +42,50 @@
 
     <script>
         const loginForm = document.getElementById('login-form');
+        // Uniamo i due contenitori in uno solo per semplicità
         const messageContainer = document.getElementById('message-container');
 
         loginForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+            event.preventDefault(); // Impedisce l'invio tradizionale del form
             
-            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
+            // Pulisce i messaggi precedenti
+            messageContainer.innerHTML = '';
+
+            const formData = new FormData(loginForm);
+
             fetch("{{ url_for('auth_bp.handle_login_api') }}", {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({ email: email, password: password }),
+                body: formData,
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.redirect_url) {
-                    messageContainer.innerHTML = `<p class="message-success">${data.message}</p>`;
-                    setTimeout(() => { window.location.href = data.redirect_url; }, 1500);
+            .then(response => response.json().then(data => ({ status: response.status, body: data })))
+            .then(({ status, body }) => {
+                if (status === 200 && body.redirect_url) {
+                    // Crea il div del messaggio, assegna la classe CSS e il testo
+                    messageContainer.innerHTML = `<div class="response-message message-success">${body.message}</div>`;
+                    
+                    // Reindirizza dopo un breve ritardo
+                    setTimeout(() => { window.location.href = body.redirect_url; }, 1000);
+
                 } else {
-                    messageContainer.innerHTML = `<p class="message-error">Errore: ${data.error}</p>`;
+                    // Costruisce il messaggio di errore
+                    let errorMessage = body.error || body.message || 'Si è verificato un errore.';
+                    if (body.details) {
+                        errorMessage += '<ul>';
+                        for (const field in body.details) {
+                            // Mostra il primo errore per ogni campo
+                            errorMessage += `<li>${body.details[field][0]}</li>`;
+                        }
+                        errorMessage += '</ul>';
+                    }
+                    
+                    // Crea il div del messaggio, assegna la classe CSS e l'HTML dell'errore
+                    messageContainer.innerHTML = `<div class="response-message message-error">${errorMessage}</div>`;
                 }
             })
             .catch((error) => {
                 console.error('Errore:', error);
-                messageContainer.innerHTML = `<p class="message-error">Impossibile contattare il server.</p>`;
+                // Messaggio di errore generico per problemi di rete
+                messageContainer.innerHTML = `<div class="response-message message-error">Impossibile contattare il server.</div>`;
             });
         });
     </script>

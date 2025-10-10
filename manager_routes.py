@@ -140,7 +140,8 @@ def gestione_insegnamenti():
 
             return render_template('manager/teaching_management.html', 
                                    insegnamenti=lista_insegnamenti, 
-                                   corsi=lista_corsi)
+                                   corsi=lista_corsi,
+                                   )
     finally:
         if conn:
             conn.close()

@@ -169,13 +169,44 @@ body {
     font-size: 0.9rem;
 }
 
-.message-success {
-    color: #16a34a; /* Verde */
-    font-weight: 600;
+/* Contenitore per i messaggi, per gestire la spaziatura */
+#message-container, #error-container {
+    width: 100%;
+    margin-top: 1.5rem; /* Aggiunge spazio sopra i messaggi */
+    text-align: left; /* Allinea il testo a sinistra */
 }
+
+/* Stile base per tutti i messaggi di risposta */
+.response-message {
+    padding: 0.75rem 1rem; /* Spaziatura interna */
+    border-radius: 0.375rem; /* Angoli arrotondati */
+    font-weight: 500; /* Leggermente grassetto */
+    border: 1px solid transparent;
+    font-size: 0.9rem; /* Dimensione del font */
+}
+
+/* Stile specifico per i messaggi di successo */
+.message-success {
+    color: #155724;           /* Testo verde scuro */
+    background-color: #d4edda; /* Sfondo verde chiaro */
+    border-color: #c3e6cb;
+}
+
+/* Stile specifico per i messaggi di errore */
 .message-error {
-    color: #dc2626; /* Rosso */
-    font-weight: 600;
+    color: #721c24;           /* Testo rosso scuro */
+    background-color: #f8d7da; /* Sfondo rosso chiaro */
+    border-color: #f5c6cb;
+}
+
+/* Stile per la lista di errori (se ci sono dettagli) */
+.message-error ul {
+    margin: 0.5rem 0 0 1rem;
+    padding: 0;
+}
+
+.message-error li {
+    list-style-type: disc;
 }
 
 

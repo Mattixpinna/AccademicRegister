@@ -28,11 +28,14 @@ def create_app():
     else:
         app.config['SECRET_KEY'] = secret
 
-    # cookies sicure
+    # se si lavora in locale, disabilita l'obbligo di HTTPS per i cookie
+    IS_PRODUCTION = os.environ.get('RENDER') == 'true'
+
+    # cookies sicuri
     app.config.update(
         SESSION_COOKIE_HTTPONLY=True, # previene accessi JS ai cookie
-        SESSION_COOKIE_SAMESITE='Lax',  # protezione CSRF di base
-        SESSION_COOKIE_SECURE=True  # assicura che i cookie siano inviati solo su HTTPS
+        SESSION_COOKIE_SAMESITE='Lax',  # protezione CSRF di base  
+        SESSION_COOKIE_SECURE=IS_PRODUCTION # assicura che i cookie siano inviati solo su HTTPS
     )
 
     # Configurazione CORS
@@ -64,9 +67,7 @@ def create_app():
 
     return app
 
-# Questo blocco è solo per lo sviluppo locale
+# avvio dell'app
 if __name__ == '__main__':
     app = create_app()
-    # Esegui con debug=False anche in sviluppo per testare il comportamento di produzione
-    # Il reload automatico è comunque attivo con `flask run` o `gunicorn --reload`
     app.run(host='0.0.0.0', port=5001, debug=False)

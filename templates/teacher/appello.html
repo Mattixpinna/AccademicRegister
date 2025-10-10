@@ -41,6 +41,7 @@
                 <p class="subtitle">Lezione del {{ lezione.data }}, ore {{ lezione.ora }}</p>
 
                 <form id="attendance-form" action="{{ url_for('teacher_bp.salva_presenze') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="idLezione" value="{{ lezione.idLezione }}">
 
                     <div class="student-grid">

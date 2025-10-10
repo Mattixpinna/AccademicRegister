@@ -42,7 +42,7 @@
                 <p class="subtitle">Seleziona la lezione e conferma la tua presenza per registrarla.</p>
 
                 <form class="presence-form" action="{{ url_for('teacher_bp.salva_firma_docente') }}" method="POST">
-                    
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="form-group">
                         <label for="lezione-select">Seleziona Lezione</label>
                         <select name="lezione" id="lezione-select" required>
@@ -55,7 +55,6 @@
                         </select>
                     </div>
 
-                     <!-- NUOVA SEZIONE PER LA CONFERMA DELLA PRESENZA (Toggle Switch) -->
                     <div class="form-group toggle-group">
                         <label class="toggle-switch">
                             <input type="checkbox" id="conferma_presenza" name="conferma_presenza">

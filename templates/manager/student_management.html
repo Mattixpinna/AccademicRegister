@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Gestione Studenti - Accademia</title>
-    <!-- Assicurati che il percorso del CSS sia corretto -->
     <link rel="stylesheet" href="{{ url_for('manager_bp.static', filename='css/manager/student_management.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -143,6 +143,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     // Funzione per popolare dinamicamente l'anno accademico
     function popolaAnniAccademici() {
@@ -288,7 +290,10 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch(endpoint, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
                 body: JSON.stringify(formData)
             });
             const result = await response.json();
@@ -387,7 +392,10 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const response = await fetch('/manager/api/studenti/disiscrivi', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
                     body: JSON.stringify(payload)
                 });
                 const result = await response.json();
@@ -408,7 +416,10 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const response = await fetch('/manager/api/studenti/elimina', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
                     body: JSON.stringify({ matricola })
                 });
                 const result = await response.json();

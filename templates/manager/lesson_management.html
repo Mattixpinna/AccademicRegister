@@ -28,6 +28,7 @@
             <p class="subtitle">Compila i campi per pianificare una nuova lezione.</p>
             
             <form action="{{ url_for('manager_bp.gestione_lezioni') }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="action" value="add">
                 
                 <div class="form-group">
@@ -85,6 +86,7 @@
             <p><strong>Fine:</strong> <span id="modalEnd"></span></p>
             <p><strong>Aula:</strong> <span id="modalAula"></span></p>
             <form id="deleteForm" action="{{ url_for('manager_bp.gestione_lezioni') }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" id="idLezioneDaEliminare" name="idLezioneDaEliminare">
                 <button type="submit" class="delete-button">Elimina Lezione</button>

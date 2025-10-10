@@ -29,11 +29,12 @@ body {
 
 .logout-link {
     text-decoration: none;
-    color: #555;
+    color: #495057;
     font-weight: 600;
-    font-size: 1rem;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    transition: background-color 0.2s;
 }
 
 .logout-link:hover {

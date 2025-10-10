@@ -31,10 +31,11 @@
 
         <main class="main-content">
 
-            <!-- Sezione 1: Aggiungi Nuovo Docente -->
             <section id="aggiungi-docente" class="form-section">
                 <h2 class="section-title">1. Aggiungi Nuovo Docente</h2>
                 <form action="{{ url_for('manager_bp.aggiungi_docente') }}" method="POST" class="form-layout">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
                     <div>
                         <label for="idDocente" class="form-label">ID Docente</label>
                         <input type="text" id="idDocente" name="idDocente" placeholder="Es. D0123" required class="form-input">
@@ -63,10 +64,11 @@
                 </form>
             </section>
 
-            <!-- Sezione 2: Assegna Cattedre -->
             <section id="assegna-cattedra" class="form-section">
                 <h2 class="section-title">2. Assegna Cattedra</h2>
                 <form action="{{ url_for('manager_bp.assegna_cattedra') }}" method="POST" class="form-layout">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
                     <div>
                         <label for="docente_cattedra" class="form-label">Seleziona Docente</label>
                         <select id="docente_cattedra" name="docente_cattedra" required class="form-input">
@@ -95,11 +97,12 @@
                 </form>
             </section>
 
-            <!-- Sezione 3: Rimuovi / Solleva -->
             <section id="rimuovi-solleva" class="form-section">
                 <h2 class="section-title">3. Rimuovi Docente o Cattedra</h2>
                 <div class="subsection-container">
                     <form action="{{ url_for('manager_bp.rimuovi_docente') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        
                         <h3 class="subsection-title">Rimuovi un docente dal sistema</h3>
                         <label for="docente_da_rimuovere" class="form-label">Seleziona Docente</label>
                         <select id="docente_da_rimuovere" name="docente_da_rimuovere" required class="form-input">
@@ -116,6 +119,8 @@
                     <hr>
 
                     <form action="{{ url_for('manager_bp.solleva_da_cattedra') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        
                         <h3 class="subsection-title">Solleva un docente da una cattedra</h3>
                         <label for="cattedra_da_rimuovere" class="form-label">Seleziona Cattedra</label>
                         <select id="cattedra_da_rimuovere" name="cattedra_da_rimuovere" required class="form-input">
@@ -133,7 +138,6 @@
                 </div>
             </section>
 
-            <!-- Sezione 4: Verifica Andamento -->
             <section id="verifica-andamento" class="form-section">
                 <h2 class="section-title">4. Verifica Andamento Docente</h2>
                 <form action="{{ url_for('manager_bp.gestione_docenti') }}" method="GET" class="form-layout">
@@ -186,7 +190,6 @@
                     </h3>
                     {% endif %}
                     
-                    <!-- NUOVO: Aggiunta visualizzazione ore totali -->
                     {% if mese_corrente and ore_totali is not none %}
                     <p class="total-hours-summary">
                         Ore totali nel mese di <strong>{{ nome_mese_corrente }}</strong>: <strong>{{ ore_totali }}</strong>

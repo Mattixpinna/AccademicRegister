@@ -33,6 +33,8 @@
             <p class="subtitle">Compila i campi per creare un nuovo insegnamento.</p>
 
             <form action="{{ url_for('manager_bp.gestione_insegnamenti') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
                 <input type="hidden" name="action" value="add">
 
                 <div class="form-group">
@@ -113,6 +115,8 @@
                             <td>{{ ins.data_fine }}</td>
                             <td>
                                 <form action="{{ url_for('manager_bp.gestione_insegnamenti') }}" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questo insegnamento dal piano di studi?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id_insegnamento_da_eliminare" value="{{ ins.idInsegnamento }}">
                                     <input type="hidden" name="id_corso_da_cui_eliminare" value="{{ ins.idCorso }}">
