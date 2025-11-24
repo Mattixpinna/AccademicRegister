@@ -1,0 +1,265 @@
+/* =========================================
+   1. RESET E STILI GLOBALI (Dal Riferimento)
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* =========================================
+   2. LAYOUT: HEADER, MAIN, FOOTER
+   ========================================= */
+
+/* Header */
+.header {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 55px;
+}
+
+.logout-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+.logout-link:hover {
+    color: #2c3e50;
+}
+
+/* Main Container */
+main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px; /* Coerente con le altre pagine */
+}
+
+/* Footer */
+.main-footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: auto;
+}
+
+.main-footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   3. TYPOGRAPHY E FLASH MESSAGES
+   ========================================= */
+h1.dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    text-align: center;
+}
+
+p.dashboard-subtitle {
+    color: #7f8c8d;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+/* Flash Messages (Presi dal riferimento) */
+.flash-messages {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.alert.alert-success { background-color: #28a745; }
+.alert.alert-error { background-color: #dc3545; }
+.alert.alert-warning { background-color: #ffc107; color: #333; }
+.alert.alert-info { background-color: #0d6efd; }
+
+/* =========================================
+   4. COMPONENTI SPECIFICI AGENDA
+   ========================================= */
+
+/* Card Filtri: Usa lo stile .card del riferimento */
+.filter-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef; /* Bordo leggero per definizione */
+}
+
+/* Stile della Select nel form */
+.form-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da; /* Colore standard bootstrap-like */
+    border-radius: 8px; /* Arrotondato come le card */
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    color: #495057;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none; /* Rimuove lo stile default del browser */
+    /* Aggiungi una freccetta custom se vuoi, altrimenti usa default */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #3A86FF;
+    box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.15);
+}
+
+/* Container Tabella: Stile Card */
+.table-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    overflow: hidden; /* Per arrotondare gli angoli della tabella */
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+}
+
+/* Tabella (Stile del riferimento adattato) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+thead {
+    background-color: #f8f9fa;
+}
+
+th, td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+th {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: #fcfcfc;
+}
+
+/* Badges (Stati Presenza) */
+.badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.badge-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.badge-warning {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* Messaggio "Nessun dato" */
+.no-data {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+/* =========================================
+   5. RESPONSIVE (MEDIA QUERIES)
+   ========================================= */
+@media (max-width: 768px) {
+    main {
+        padding: 1rem;
+    }
+
+    .header {
+        padding: 0.8rem 1rem;
+    }
+    
+    h1.dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .filter-card, .table-container {
+        padding: 1.5rem; /* Meno padding su mobile */
+    }
+
+    /* Tabella scrollabile orizzontalmente su mobile */
+    .table-container {
+        overflow-x: auto; 
+    }
+
+    th, td {
+        padding: 0.8rem 0.6rem;
+        font-size: 0.85rem;
+        white-space: nowrap; /* Evita a capo brutti su mobile, forza scroll */
+    }
+}

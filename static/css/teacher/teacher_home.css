@@ -3,7 +3,6 @@
  * =================================
  */
 
-/* CORREZIONE CHIAVE: Imposta un box-model più intuitivo per tutti gli elementi */
 *,
 *::before,
 *::after {
@@ -22,7 +21,7 @@ body {
 
 .container {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1400px; /* Aumentato da 1200px */
     margin: 0 auto;
 }
 
@@ -87,10 +86,8 @@ h1, h2, p {
 .dashboard-cards {
     display: flex;
     justify-content: center;
-    gap: 80px;
-    flex-wrap: wrap;
-    /* MODIFICA: Rimuovendo 'align-items: flex-start', le card si allungheranno
-       automaticamente alla stessa altezza (comportamento di default 'stretch'). */
+    gap: 50px; 
+    flex-wrap: wrap; 
 }
 
 .card {
@@ -98,12 +95,14 @@ h1, h2, p {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     padding: 40px;
-    width: 420px;
-    height: 420px; /* Altezza fissa per uniformità */
+    flex: 1; 
+    min-width: 300px; 
+    max-width: 450px;
+
+    height: 420px; 
     text-align: center;
     border: 1px solid #e0e0e0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Queste regole sono fondamentali per far funzionare l'allineamento interno */
     display: flex;
     flex-direction: column;
 }

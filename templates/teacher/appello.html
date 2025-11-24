@@ -56,30 +56,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for studente in studenti %}
-                            <tr class="student-row {% if studente.stato == 'assente' %}is-absent{% endif %}" data-studente-id="{{ studente.matricola }}">
-                                <td>{{ studente.matricola }}</td>
-                                <td>{{ studente.Nome }}</td>
-                                <td>{{ studente.Cognome }}</td>
-                                <td>
-                                    <input type="hidden" name="studente_{{ studente.matricola }}" value="{{ studente.stato }}">
-                                    <button type="button" class="attendance-button {{ studente.stato }}">
-                                        {{ 'Presente' if studente.stato == 'presente' else 'Assente' }}
-                                    </button>
-                                </td>
-                                <td>
-                                    <input type="hidden" id="orario-input-{{ studente.matricola }}" name="orario_{{ studente.matricola }}" value="">
-                                    <button type="button" class="time-button" data-studente-id="{{ studente.matricola }}">
-                                        Imposta
-                                    </button>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 2rem;">Nessuno studente iscritto a questa materia.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
+                                {% for studente in studenti %}
+                                <tr class="student-row {% if studente.stato == 'assente' %}is-absent{% endif %}" data-studente-id="{{ studente.matricola }}">
+                                    <td>{{ studente.matricola }}</td>
+                                    <td>{{ studente.Nome }}</td>
+                                    <td>{{ studente.Cognome }}</td>
+                                    <td>
+                                        <input type="hidden" name="studente_{{ studente.matricola }}" value="{{ studente.stato }}">
+                                        <button type="button" class="attendance-button {{ studente.stato }}">
+                                            {{ 'Presente' if studente.stato == 'presente' else 'Assente' }}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" 
+                                            id="orario-input-{{ studente.matricola }}" 
+                                            name="orario_{{ studente.matricola }}" 
+                                            value="{{ studente.orario_esistente }}">
+                                        
+                                        <button type="button" 
+                                                class="time-button {% if studente.orario_esistente %}is-set{% endif %}" 
+                                                data-studente-id="{{ studente.matricola }}">
+                                            {{ studente.orario_esistente if studente.orario_esistente else 'Imposta' }}
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 2rem;">Nessuno studente iscritto a questa materia.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
 

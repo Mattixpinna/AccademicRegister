@@ -3,9 +3,9 @@ from dbutils.pooled_db import PooledDB
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Carica le variabili d'ambiente dal file .env
+load_dotenv()  # Caricare le variabili d'ambiente dal file .env
 
-# Legge le credenziali dalle variabili d'ambiente per maggiore sicurezza.
+# Leggere le credenziali dalle variabili d'ambiente per maggiore sicurezza.
 DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
@@ -13,10 +13,10 @@ DB_NAME = os.environ.get('DB_NAME')
 
 try:
     pool = PooledDB(
-        creator=pymysql,      # La libreria da usare
-        maxconnections=10,    # Numero massimo di connessioni nel pool
-        mincached=2,          # Numero minimo di connessioni da tenere pronte
-        blocking=True,        # Attende se non ci sono connessioni disponibili
+        creator=pymysql,      # Specificare la libreria database da utilizzare
+        maxconnections=10,    # Impostare il numero massimo di connessioni consentite nel pool
+        mincached=2,          # Mantenere un numero minimo di connessioni sempre pronte all'uso
+        blocking=True,        # Attendere il rilascio di una connessione se il pool è momentaneamente pieno
         host=DB_HOST,
         user=DB_USER,
         password=DB_PASSWORD,
@@ -26,14 +26,13 @@ try:
     )
 except pymysql.Error as e:
     print(f"Errore critico: Impossibile creare il pool di connessioni al database. {e}")
-    # In un'app reale, questo errore dovrebbe essere gestito in modo più robusto.
+    # In un'app reale, gestire questo errore in modo più robusto (es. log su file o retry).
     pool = None
 
 def get_db_connection():
-    """
-    Recupera una connessione dal pool.
-    Questa funzione sostituisce la vecchia implementazione.
-    """
     if pool is None:
+        # Sollevare un'eccezione esplicita se il pool non è stato inizializzato correttamente
         raise ConnectionError("Il pool di connessioni al database non è stato inizializzato.")
+    
+    # Restituire una connessione attiva prelevata dal pool
     return pool.connection()

@@ -69,14 +69,12 @@
                         <label for="insegnamento-reg">Insegnamento</label>
                         <select id="insegnamento-reg" required disabled>
                             <option value="" disabled selected>Scegli prima corso e anno...</option>
-                            <!-- MODIFICA: Opzioni popolate da JS, inclusa l'opzione "tutti" -->
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="anno-accademico-reg">Anno Accademico</label>
                         <select id="anno-accademico-reg" required>
-                            <!-- Opzioni generate dinamicamente da JavaScript -->
-                        </select>
+                            </select>
                     </div>
                 </div>
 
@@ -121,20 +119,45 @@
              <div id="info-studente-presenze" class="student-info" style="display: none;">
                 Riepilogo presenze per: <strong id="nome-cognome-presenze"></strong>
             </div>
+            
             <div id="presenze-results" style="display: none;">
-                 <table class="results-table">
-                     <thead>
-                         <tr>
-                             <th>Insegnamento</th>
-                             <th>Anno Accademico</th>
-                             <th>Ore di Presenza Svolte</th>
-                             <th>Ore Totali Previste</th>
-                         </tr>
-                     </thead>
-                     <tbody id="tabella-presenze-body"></tbody>
-                 </table>
+                 <div class="table-wrapper">
+                     <table class="results-table">
+                         <thead>
+                             <tr>
+                                 <th>Insegnamento</th>
+                                 <th>A.A.</th>
+                                 <th>Ore Svolte</th>
+                                 <th>Ore Previste</th>
+                                 <th>Azioni</th> 
+                             </tr>
+                         </thead>
+                         <tbody id="tabella-presenze-body"></tbody>
+                     </table>
+                 </div>
+            </div>
+
+            <div id="dettagli-lezioni-wrapper" style="display: none; margin-top: 30px; border-top: 2px dashed #dee2e6; padding-top: 20px;">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0d6efd;">
+                    Dettaglio Lezioni: <span id="titolo-insegnamento-dettaglio" style="color: #343a40;"></span>
+                </h3>
+                <div class="table-wrapper">
+                    <table class="results-table" style="font-size: 0.95rem;">
+                        <thead>
+                            <tr style="background-color: #e7f1ff;">
+                                <th>Data</th>
+                                <th>Orario Lezione</th>
+                                <th>Ingresso Studente</th>
+                                <th>Ore Riconosciute</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabella-dettagli-body">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </main>
 
     <footer class="footer">
@@ -176,11 +199,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectInsegnamentoDel = document.getElementById('insegnamento-del');
     const btnDisiscrivi = document.getElementById('btn-disiscrivi');
     const btnElimina = document.getElementById('btn-elimina');
+    
+    // Riferimenti sezione Presenze
     const inputMatricolaPresenze = document.getElementById('matricola-presenze');
     const infoStudentePresenze = document.getElementById('info-studente-presenze');
     const nomeCognomePresenze = document.getElementById('nome-cognome-presenze');
     const presenzeResults = document.getElementById('presenze-results');
     const tabellaPresenzeBody = document.getElementById('tabella-presenze-body');
+    const dettagliLezioniWrapper = document.getElementById('dettagli-lezioni-wrapper');
+    const tabellaDettagliBody = document.getElementById('tabella-dettagli-body');
+    const titoloInsegnamentoDettaglio = document.getElementById('titolo-insegnamento-dettaglio');
 
     function showNotification(message, type = 'success') {
         const notificationArea = document.getElementById('notification-area');
@@ -192,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
-        }, 5000); // Aumentato il tempo a 5 secondi per messaggi più lunghi
+        }, 5000); 
     }
     
     function populateSelect(selectElement, options, placeholder) {
@@ -220,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
         selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Scegli prima corso e anno...</option>';
     });
 
-    // ### MODIFICA: Popolamento dinamico con opzione "Iscrivi a tutti" ###
     selectAnnoReg.addEventListener('change', async () => {
         const id_corso = selectCorsoReg.value;
         const anno = selectAnnoReg.value;
@@ -235,10 +262,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) throw new Error('Errore di rete');
             const insegnamenti = await response.json();
             
-            // Svuota le opzioni precedenti e aggiunge il placeholder
             selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Seleziona un\'opzione...</option>';
 
-            // Aggiunge l'opzione speciale per iscrivere a tutti gli insegnamenti
             if (insegnamenti.length > 0) {
                 const opzioneTutti = new Option(`--- Iscrivi a tutti gli ${insegnamenti.length} insegnamenti di questo anno ---`, 'tutti');
                 opzioneTutti.style.fontWeight = 'bold';
@@ -246,7 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 selectInsegnamentoReg.add(opzioneTutti);
             }
 
-            // Popola con i singoli insegnamenti
             insegnamenti.forEach(insegnamento => {
                 const option = new Option(insegnamento.Nome, insegnamento.idInsegnamento);
                 selectInsegnamentoReg.add(option);
@@ -260,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ### MODIFICA: Gestione invio per iscrizione singola o massiva ###
     formRegistrazione.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -282,7 +305,6 @@ document.addEventListener('DOMContentLoaded', function() {
             anno_accademico: document.getElementById('anno-accademico-reg').value
         };
 
-        // Aggiunge l'ID insegnamento solo se non è un'iscrizione massiva
         if (!isIscrizioneMassiva) {
             formData.id_insegnamento = idInsegnamentoSelezionato;
         }
@@ -301,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             showNotification(result.message || 'Operazione completata!');
             formRegistrazione.reset();
-            popolaAnniAccademici(); // Ripopola e reimposta il valore di default
+            popolaAnniAccademici();
             selectAnnoReg.disabled = true;
             selectInsegnamentoReg.disabled = true;
             selectInsegnamentoReg.innerHTML = '<option value="" disabled selected>Scegli prima corso e anno...</option>';
@@ -310,16 +332,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // --- Funzione Globale per il bottone HTML ---
+    window.caricaDettagliLezioni = async function(idInsegnamento, nomeInsegnamento, annoAccademico) {
+        const matricola = inputMatricolaPresenze.value;
+        titoloInsegnamentoDettaglio.textContent = nomeInsegnamento;
+        tabellaDettagliBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Caricamento lezioni...</td></tr>';
+        dettagliLezioniWrapper.style.display = 'block';
+
+        dettagliLezioniWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        try {
+            const response = await fetch(`/manager/api/studenti/${matricola}/presenze/dettagli?id_insegnamento=${idInsegnamento}&anno_accademico=${annoAccademico}`);
+            if (!response.ok) throw new Error('Errore nel caricamento dettagli.');
+            
+            const lezioni = await response.json();
+            tabellaDettagliBody.innerHTML = '';
+
+            if (lezioni.length > 0) {
+                lezioni.forEach(l => {
+                    tabellaDettagliBody.innerHTML += `
+                        <tr>
+                            <td>${l.data}</td>
+                            <td>${l.ora_inizio} - ${l.ora_fine}</td>
+                            <td>${l.orario_ingresso_effettivo}</td>
+                            <td><strong>${l.ore_riconosciute}</strong></td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tabellaDettagliBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nessuna lezione registrata per questo insegnamento.</td></tr>';
+            }
+
+        } catch (error) {
+            showNotification(error.message, 'error');
+            tabellaDettagliBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: red;">Errore caricamento dati.</td></tr>';
+        }
+    };
+
     async function fetchAndDisplayStudentData(matricola, formType) {
         if (formType === 'gestione') {
-            infoStudenteGest.style.display = 'none';
-            selectInsegnamentoDel.innerHTML = '<option value="" disabled selected>In attesa...</option>';
-            selectInsegnamentoDel.disabled = true;
-            btnDisiscrivi.disabled = true;
-            btnElimina.disabled = true;
+             infoStudenteGest.style.display = 'none';
+             selectInsegnamentoDel.innerHTML = '<option value="" disabled selected>In attesa...</option>';
+             selectInsegnamentoDel.disabled = true;
+             btnDisiscrivi.disabled = true;
+             btnElimina.disabled = true;
         } else if (formType === 'presenze') {
             infoStudentePresenze.style.display = 'none';
             presenzeResults.style.display = 'none';
+            dettagliLezioniWrapper.style.display = 'none'; 
             tabellaPresenzeBody.innerHTML = '';
         }
 
@@ -344,22 +404,31 @@ document.addEventListener('DOMContentLoaded', function() {
             if (formType === 'presenze') {
                 nomeCognomePresenze.textContent = `${studente.nome} ${studente.cognome}`;
                 infoStudentePresenze.style.display = 'block';
+                
                 const presenzeResponse = await fetch(`/manager/api/studenti/${matricola}/presenze`);
                 if (!presenzeResponse.ok) throw new Error('Errore recupero presenze.');
                 const presenze = await presenzeResponse.json();
+                
                 tabellaPresenzeBody.innerHTML = '';
                 if (presenze.length > 0) {
                     presenze.forEach(p => {
+                        const nomeSafe = p.nome_insegnamento.replace(/'/g, "\\'");
                         tabellaPresenzeBody.innerHTML += `
                             <tr>
                                 <td>${p.nome_insegnamento}</td>
                                 <td>${p.anno_accademico}</td>
                                 <td>${parseFloat(p.ore_svolte).toFixed(2)}</td>
                                 <td>${p.ore_totali_previste}</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; width: auto;"
+                                        onclick="caricaDettagliLezioni('${p.idInsegnamento}', '${nomeSafe}', '${p.anno_accademico}')">
+                                        Vedi Lezioni
+                                    </button>
+                                </td>
                             </tr>`;
                     });
                 } else {
-                    tabellaPresenzeBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nessuna iscrizione o presenza trovata.</td></tr>';
+                    tabellaPresenzeBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nessuna iscrizione o presenza trovata.</td></tr>';
                 }
                 presenzeResults.style.display = 'block';
             }

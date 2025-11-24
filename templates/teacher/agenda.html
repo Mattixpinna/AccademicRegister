@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Docente - Accademia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher/agenda.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Accademia d'Arte di Cagliari" height="40">
+        </div>
+        <div>
+            <a href="{{ url_for('teacher_bp.serve_dashboard_page') }}" class="logout-link">Home</a>
+        </div>
+    </header>
+
+    <main class="dashboard"> <div class="container">
+            <h1 class="dashboard-title">Agenda Lezioni</h1>
+            <p class="dashboard-subtitle">Seleziona un insegnamento per visualizzare lo storico delle lezioni.</p>
+
+            <div class="filter-card">
+                <form method="GET" action="{{ url_for('teacher_bp.serve_agenda_page') }}">
+                    <label for="id_insegnamento" style="display:block; margin-bottom:10px; font-weight:600;">Seleziona Insegnamento:</label>
+                    <select name="id_insegnamento" id="id_insegnamento" class="form-select" onchange="this.form.submit()">
+                        <option value="" disabled {{ 'selected' if not selected_id }}>-- Scegli un corso --</option>
+                        {% for corso in insegnamenti %}
+                            <option value="{{ corso.idInsegnamento }}" {{ 'selected' if corso.idInsegnamento == selected_id }}>
+                                {{ corso.Nome }} (A.A. {{ corso.anno_accademico }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+
+            {% if selected_id %}
+                <h2 style="text-align: left; margin-bottom: 20px; color: #2c3e50;">
+                    Storico: <span style="color: #4A90E2;">{{ nome_insegnamento }}</span>
+                </h2>
+
+                <div class="table-container">
+                    {% if lezioni %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Orario</th>
+                                    
+                                    <th>Stato</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lezione in lezioni %}
+                                <tr>
+                                    <td>{{ lezione.data_str }}</td>
+                                    <td>{{ lezione.ora_inizio }} - {{ lezione.ora_fine }}</td>
+                                    
+                                    <td>
+                                        {% if lezione.is_svolta %}
+                                            <span class="badge badge-success">Svolta</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Non Svolta / Assente</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ lezione.note if lezione.note else '-' }}</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="no-data">
+                            <p>Nessuna lezione trovata per questo insegnamento.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
+    </footer>
+
+</body>
+</html>

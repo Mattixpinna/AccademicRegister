@@ -38,7 +38,7 @@
                     
                     <div>
                         <label for="idDocente" class="form-label">ID Docente</label>
-                        <input type="text" id="idDocente" name="idDocente" placeholder="Es. D0123" required class="form-input">
+                        <input type="text" id="idDocente" name="idDocente" placeholder="Es. 123" required class="form-input">
                     </div>
                     <div class="grid-container">
                         <div>
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" placeholder="mario.rossi@universita.it" required class="form-input">
+                        <input type="email" id="email" name="email" placeholder="mario.rossi@accademia.it" required class="form-input">
                     </div>
                     <div>
                         <label for="password" class="form-label">Password</label>
@@ -89,7 +89,8 @@
                     </div>
                     <div>
                         <label for="anno_accademico" class="form-label">Anno Accademico</label>
-                        <input type="text" id="anno_accademico" name="anno_accademico" placeholder="Es. 2024/2025" required class="form-input">
+                        <select id="anno_accademico" name="anno_accademico" required class="form-input">
+                            </select>
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-success">Assegna Cattedra</button>
@@ -237,5 +238,42 @@
     <footer class="footer">
         <p>&copy; 2025 Accademia d'Arte di Cagliari. Tutti i diritti riservati.</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleziona il menu a tendina
+            const selectAnnoAccademico = document.getElementById('anno_accademico');
+
+            // Calcola gli anni accademici
+            const oggi = new Date();
+            const annoCorrente = oggi.getFullYear();
+            const meseCorrente = oggi.getMonth() + 1; // Gennaio è 0
+
+            // L'anno accademico inizia a settembre (mese 9)
+            let inizioAnnoAccademicoCorrente;
+            if (meseCorrente >= 9) {
+                inizioAnnoAccademicoCorrente = annoCorrente;
+            } else {
+                inizioAnnoAccademicoCorrente = annoCorrente - 1;
+            }
+
+            // Crea le stringhe per gli anni accademici
+            const annoPrecedente = `${inizioAnnoAccademicoCorrente - 1}/${inizioAnnoAccademicoCorrente}`;
+            const annoAttuale = `${inizioAnnoAccademicoCorrente}/${inizioAnnoAccademicoCorrente + 1}`;
+            const annoSuccessivo = `${inizioAnnoAccademicoCorrente + 1}/${inizioAnnoAccademicoCorrente + 2}`;
+
+            const anni = [annoPrecedente, annoAttuale, annoSuccessivo];
+
+            // Popola il menu a tendina
+            anni.forEach(anno => {
+                const option = document.createElement('option');
+                option.value = anno;
+                option.textContent = anno;
+                selectAnnoAccademico.appendChild(option);
+            });
+
+            // Imposta l'anno accademico corrente come selezionato di default
+            selectAnnoAccademico.value = annoAttuale;
+        });
+    </script>
 </body>
 </html>

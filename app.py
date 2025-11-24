@@ -6,7 +6,7 @@ from extensions import limiter
 from auth_routes import auth_bp
 from teacher_routes import teacher_bp
 from manager_routes import manager_bp
-from database import pool # Importa il pool per chiuderlo correttamente
+from database import pool
 
 # crea l'istanza di CSRFProtect
 csrf = CSRFProtect()
@@ -45,21 +45,21 @@ def create_app():
     # inizializza le estensioni con l'app
     limiter.init_app(app)
 
-    # Inizializza CSRF protection
+    # inizializza CSRF protection
     csrf.init_app(app)
 
-    # --- REGISTRAZIONE DEI BLUEPRINT ---
+    # registra i blueprint
     app.register_blueprint(auth_bp)
     app.register_blueprint(teacher_bp)
     app.register_blueprint(manager_bp)
 
-    # --- ROTTE PRINCIPALI ---
+    # rotte principali
     @app.route('/')
     def home():
         return render_template('home.html')
         
-    # --- GESTIONE DELLA CHIUSURA ---
-    # Aggiunge un hook per chiudere il pool di connessioni quando l'app si ferma
+    # gestione della chiusura
+    # aggiunge un hook per chiudere il pool di connessioni quando l'app si ferma
     @app.teardown_appcontext
     def close_db_pool(exception=None):
         if pool:
